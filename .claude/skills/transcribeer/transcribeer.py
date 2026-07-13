@@ -29,7 +29,7 @@ Gemaakt door Bart Boonstra (Slim Werken AI). Lokaal, gratis, privé.
 """
 from __future__ import annotations
 
-import argparse, json, re, subprocess, sys, time
+import argparse, json, re, subprocess, sys, tempfile, time
 from pathlib import Path
 
 YTDLP = [sys.executable, "-m", "yt_dlp"]
@@ -140,8 +140,9 @@ def channel_label(url: str) -> str:
 
 # ---------- ondertitels ophalen ----------
 
-def fetch_captions(video_id: str, taal: str, vertaal: bool):
-    """Haalt de ondertitel-tekst op. Geeft (tekst, taalcode, vertaald_bool) of (None, reden, False)."""
+def _fetch_via_api(video_id: str, taal: str, vertaal: bool):
+    """Snelle route: youtube-transcript-api (geen download). Kan geblokkeerd worden
+    op cloud-IP's (RequestBlocked) - zie _fetch_via_ytdlp voor de fallback daarvoor."""
     try:
         from youtube_transcript_api import YouTubeTranscriptApi
     except ImportError:
@@ -195,6 +196,93 @@ def fetch_captions(video_id: str, taal: str, vertaal: bool):
     if not text:
         return None, "lege ondertitel", False
     return text, transcript.language_code, translated
+
+
+_VTT_TAG_RE = re.compile(r"<[^>]+>")
+
+
+def _parse_vtt_text(path: Path) -> str:
+    """Zet een YouTube auto-caption .vtt om naar platte tekst.
+
+    Auto-captions gebruiken een 'rollend' formaat waarbij elk blok de vorige regel
+    herhaalt plus één nieuwe regel. We houden daarom per blok alleen de laatste
+    tekstregel aan, en slaan opeenvolgende duplicaten over."""
+    lines = path.read_text(encoding="utf-8", errors="ignore").splitlines()
+    parts, last = [], None
+    block: list[str] = []
+
+    def flush(block: list[str]):
+        nonlocal last
+        if not block:
+            return
+        candidate = _VTT_TAG_RE.sub("", block[-1]).strip()
+        if candidate and candidate != last:
+            parts.append(candidate)
+            last = candidate
+
+    for line in lines:
+        line = line.rstrip("\n")
+        if not line.strip():
+            flush(block)
+            block = []
+            continue
+        if line.startswith("WEBVTT") or line.startswith("Kind:") or line.startswith("Language:"):
+            continue
+        if "-->" in line:
+            continue
+        block.append(line)
+    flush(block)
+    return " ".join(parts).strip()
+
+
+def _fetch_via_ytdlp(video_id: str, taal: str) -> tuple[str | None, str, bool]:
+    """Fallback als youtube-transcript-api geblokkeerd wordt (vaak op cloud-IP's):
+    laat yt-dlp de ondertitels downloaden (andere route dan de innertube-API) en
+    parse het .vtt-bestand zelf. Vertalen wordt hier niet ondersteund."""
+    with tempfile.TemporaryDirectory() as tmp:
+        out_tmpl = str(Path(tmp) / "%(id)s")
+        cmd = YTDLP + [
+            "--write-auto-sub", "--write-sub", "--skip-download", "--no-warnings",
+            "--sub-format", "vtt", "--sub-lang", f"{taal},en,en-US,en-GB",
+            "-o", out_tmpl, f"https://www.youtube.com/watch?v={video_id}",
+        ]
+        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+        vtt_files = sorted(Path(tmp).glob(f"{video_id}.*.vtt"))
+        if not vtt_files:
+            reason = (proc.stderr or proc.stdout or "onbekende fout").strip().splitlines()
+            return None, f"ook yt-dlp-fallback mislukt ({reason[-1] if reason else 'geen .vtt'})", False
+
+        # bestandsnaam is <id>.<taalcode>.vtt; kies volgens dezelfde taalvoorkeur.
+        by_lang = {f.stem.split(".", 1)[1]: f for f in vtt_files}
+        for cand in (taal, "en", "en-US", "en-GB"):
+            if cand in by_lang:
+                chosen, lang = by_lang[cand], cand
+                break
+        else:
+            chosen, lang = vtt_files[0], vtt_files[0].stem.split(".", 1)[1]
+
+        text = _parse_vtt_text(chosen)
+        if not text:
+            return None, "lege ondertitel (yt-dlp-fallback)", False
+        return text, lang, False
+
+
+def fetch_captions(video_id: str, taal: str, vertaal: bool):
+    """Haalt de ondertitel-tekst op. Geeft (tekst, taalcode, vertaald_bool) of (None, reden, False).
+
+    Probeert eerst youtube-transcript-api (snel, geen download). Als dat mislukt
+    (bv. RequestBlocked - YouTube blokkeert nogal eens cloud-provider IP's), valt
+    het terug op yt-dlp's eigen ondertitel-download, die een andere route gebruikt
+    en vaak wel werkt waar de eerste methode geblokkeerd wordt."""
+    text, lang, translated = _fetch_via_api(video_id, taal, vertaal)
+    if text is not None:
+        return text, lang, translated
+
+    fallback_text, fallback_lang, fallback_translated = _fetch_via_ytdlp(video_id, taal)
+    if fallback_text is not None:
+        return fallback_text, fallback_lang, fallback_translated
+
+    return None, f"{lang}; {fallback_lang}", False
 
 
 # ---------- output ----------
