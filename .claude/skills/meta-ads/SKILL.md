@@ -1,16 +1,18 @@
 ---
 name: meta-ads
-description: Schrijf, beoordeel, test en schaal Meta (Facebook/Instagram) advertenties volgens de principes van Ben Heath (Heath Media, beheerder van 300M+ dollar aan ad spend). Gebruik wanneer de gebruiker Meta-, Facebook- of Instagram-advertenties wil schrijven of beoordelen, wil weten hoe te targeten, testen, retargeten of opschalen, vraagt naar "learning limited" of een geblokkeerd ad account, of "/meta-ads" typt.
+description: Schrijf, beoordeel, test en schaal Meta (Facebook/Instagram) advertenties volgens de principes van Ben Heath (Heath Media, beheerder van 300M+ dollar aan ad spend). Gebruik wanneer de gebruiker Meta-, Facebook- of Instagram-advertenties wil schrijven of beoordelen, wil weten hoe te targeten, testen, retargeten, plaatsen of opschalen, vraagt naar een klein budget, "learning limited" of een geblokkeerd ad account, of "/meta-ads" typt.
 ---
 
 # Meta Ads volgens Ben Heath
 
-Deze skill is gedistilleerd uit alle 20 (op dat moment) recentste publieke YouTube-video's
-van Ben Heath (kanaal `youtube.com/@BenHeath`, bureau Heath Media, ~300M+ dollar beheerde ad
-spend). De volledige transcripties staan in `youtube-kennis/Ben Heath/` in deze repo —
-raadpleeg die map (grep/lees) voor extra detail, exacte quotes of stap-voor-stap UI-instructies
-die hieronder niet genoemd worden. Verzin nooit principes die niet in de transcripties staan;
-zeg expliciet als iets niet gedekt wordt in plaats van te gokken.
+Deze skill is gedistilleerd uit 50 publieke YouTube-video's van Ben Heath (kanaal
+`youtube.com/@BenHeath`, bureau Heath Media, ~300M+ dollar beheerde ad spend) — zijn 50
+nieuwste uploads plus enkele oudere video's die hij zelf in zijn playlists heeft uitgelicht.
+De volledige transcripties staan in `youtube-kennis/Ben Heath/` in deze repo — raadpleeg die
+map (grep/lees) voor extra detail, exacte quotes of stap-voor-stap UI-instructies die
+hieronder niet genoemd worden. Verzin nooit principes die niet in de transcripties staan; zeg
+expliciet als iets niet gedekt wordt in plaats van te gokken. Zijn kanaal heeft in totaal 583
+video's — deze skill dekt dus een ruime, actuele selectie, niet zijn complete archief.
 
 Let op: Meta's platform verandert snel. Sommige punten hieronder (attributie-instellingen,
 "describe your audience" AI-targeting) waren op het moment van opname net gelanceerd of in
@@ -52,7 +54,75 @@ Ga hier altijd eerst doorheen voor je op creative, targeting of scaling duikt.
   campagnes als je nog weinig volume hebt — moeilijker om uit de learning phase te komen.
   Bouw pas uit als de basis werkt.
 - **Vaste aanpassingsschema** (5–10 dagen, afhankelijk van conversievolume): lanceer, wacht,
-  beoordeel, pas dan in één keer aan. Continu tinkeren houdt je in de learning phase.
+  beoordeel, pas dan in één keer aan. Continu tinkeren houdt je in de learning phase. Gebruik
+  bij twijfel een gratis statistische-significantie-calculator om te bepalen of je al genoeg
+  data hebt om een test te beoordelen.
+
+## Campagnestructuur (2026)
+
+Grote verschuiving t.o.v. oudere Meta Ads-adviezen — Meta's targeting is grotendeels
+*suggestie*, geen harde instructie, dus veel van de oude opsplitsingen werken niet meer zoals
+bedoeld:
+
+- **Consolideer als standaard**: het liefst **één Advantage+ campagne, één ad set** die zowel
+  koud als warm publiek target. Reden: zodra een custom audience als suggestie (niet als hard
+  constraint) is toegevoegd, target Meta sowieso een mix van koud en warm — een aparte "cold"
+  en "warm" ad set laten in de praktijk vaak dezelfde spend-verdeling zien. Twee losse ad sets
+  betekent dus alleen versnipperde data en meer kans op auction overlap, zonder echt voordeel.
+- **Wél apart houden**: een campagne per product-/dienst-range (niet per variant — dus wel
+  "schoenen" vs. "hoeden", niet "rode hoed" vs. "blauwe hoed"), en **locatie** — dat is de
+  enige targeting-optie die nog wél als harde constraint werkt en dus zinvol te testen is (bv.
+  land-voor-land, of per vestiging bij een lokale franchise). Interesse-targeting,
+  lookalike-vs-open-targeting testen op ad set-niveau heeft vrijwel geen zin meer — Meta
+  negeert dat grotendeels toch.
+- **20+ ads in één ad set is prima** en vaak aanbevolen — Meta's systeem is sophisticated
+  genoeg geworden om dat te verwerken (was ooit een max van 5-6). De begrenzende factor is nu
+  hoeveel goede creative je kan produceren, niet wat Meta aankan.
+- **Test ad-copy-varianten (primary text/headline/description) bínnen één ad** via de
+  ingebouwde variant-opties (tot 5 per veld), niet via losse ads — dat houdt je ad-aantal
+  behapbaar en de data gebundeld.
+- **Automatische funnel-sequencing binnen één ad set**: Meta kan zelf sommige ads als
+  top-of-funnel inzetten (lage ROAS, want ze "openen" het contact) en andere als closer (hoge
+  ROAS). **Belangrijke valkuil**: zet nooit een ad uit puur omdat de ROAS lager is dan andere
+  ads in dezelfde ad set, zólang Meta er nog actief budget aan geeft — die ad speelt
+  waarschijnlijk een rol in de sequencing en de closer-ads presteren juist slechter zonder hem.
+  **Zet pas ads uit die Meta zelf al gestopt is met budgetteren** (0 spend) — dát is het
+  signaal dat hij niet meer bijdraagt.
+- **Afwijken van deze default** kan bewust: bij een omnipresent-content-strategie (hoge-
+  aanraking/high-ticket diensten, gebruikt awareness/engagement-campagnes ernaast) of als
+  testen in één ad set structureel vastloopt (zie creative testing tool hieronder).
+
+## Klein budget (< €3.000/maand, "tiny" < €600/maand)
+
+Specifieke aanpassingen als je met een klein budget werkt — dit is geen kwestie van "gewoon
+minder van hetzelfde doen":
+
+- **Helicopter-parenting is dodelijker bij een klein budget**: minder conversievolume betekent
+  een langere learning phase, dus rek je aanpassingsschema juist verder op (kan oplopen tot
+  weken bij een paar conversies per week) i.p.v. vaker in te grijpen.
+- **Niche hard in plaats van breed te concurreren.** Analyseer welk klantsegment het meest
+  waard is (hoogste terugkerende omzet, minste gedoe) en richt je marketing — messaging én
+  creative — volledig op dat segment. Je kan een groter budget niet verslaan op schaal, wel op
+  specificiteit.
+- **Leun zwaar op de Meta Ads Library om te modelleren** van grotere concurrenten (zie
+  concurrentie-onderzoek-sectie) — testbudget is schaars, dus bespaar het door te leren van
+  wie het al heeft uitgezocht.
+- **Doel is proof-of-concept + winstgevendheid om te herinvesteren**, niet uitgebreid testen.
+  Zodra een campagne winstgevend is, herinvesteer je de winst om te schalen — zie het als een
+  opstap, niet als eindbestemming.
+- **Nooit awareness/traffic/engagement-campagnes** — altijd direct leads/sales.
+- **Hergebruik goedpresterende organische content** (bv. Reels) als gratis creative-test: neem
+  de posts met de meeste engagement, plak er een CTA achteraan, en run die als ad.
+  Werkt niet altijd 1-op-1, maar is een goedkope aanvulling op betaald testen.
+- **Wees bereid meer te betalen per conversie dan intuïtief voelt.** Reken het uit: wat is een
+  klant je waard over de klantlevensduur, en wat mag je dus maximaal betalen om er één te
+  werven? ROAS daalt vanzelf naarmate je schaalt (de laatst-bereikte klant is altijd duurder
+  dan de eerste) — dat is normaal, en een lagere ROAS bij hogere absolute winst is een beter
+  bedrijfsresultaat dan een hoge ROAS op klein volume. Sommige grote, succesvolle bedrijven
+  (bank/verzekering/hypotheken) maken bewust verlies op de eerste transactie en verdienen het
+  terug via retentie.
+- **Verminder variabelen**: één aanbod, één campagne, één ad set — consolideer je beperkte
+  conversievolume zoveel mogelijk.
 
 ## De testing-hiërarchie (grote dingen eerst)
 
@@ -81,13 +151,26 @@ komen voor je oordeelt.
 ### Testen na de Andromeda-update
 
 - Voeg je losse nieuwe ads toe aan een bestaande ad set, dan krijgen ze vaak **geen budget**
-  — de bestaande beste performers blijven alles opslokken. Gebruik daarom de **creative
-  testing tool** (ad-niveau, onder de creative-sectie, "setup test"): Meta segmenteert je
-  publiek in aparte, niet-overlappende groepen zodat elke variant echt getest wordt. Zet de
-  vergelijkingsmetric altijd om naar je echte optimalisatiedoel (cost per lead/purchase),
-  niet de default "cost per post engagement".
-- Streef naar **~20 ad creatives per ad set** (was 6 vóór Andromeda) — Meta personaliseert nu
-  wélke ad wie te zien krijgt, dus meer diversiteit = betere matching + tragere ad fatigue.
+  — de bestaande beste performers blijven alles opslokken, en bij *bijna-identieke* varianten
+  (zelfde video, andere hook; zelfde beeld, andere tekst-overlay) kiest Meta er sowieso maar
+  één om te tonen. Gebruik daarom de **creative testing tool** (ad-niveau, onder de
+  creative-sectie, "setup test"): Meta segmenteert je publiek in aparte, niet-overlappende
+  groepen zodat elke variant een eerlijke kans krijgt. Zet de vergelijkingsmetric altijd om
+  naar je echte optimalisatiedoel (cost per lead/purchase), niet de default "cost per post
+  engagement". **Niet nodig** bij ads die al écht anders zijn (ander format, totaal andere
+  visuele stijl) — die krijgen sowieso een eigen plek in de auction.
+  - Zelfde tool = ideaal om **hook-varianten** te testen: neem een bewezen ad-body en maak er
+    5-10 versies van met alleen een andere opening (andere locatie, andere eerste zin) — snel,
+    goedkoop, en effectief tegen ad fatigue omdat 90%+ van mensen nooit voorbij de eerste
+    seconden komt.
+- Streef naar **veel creative-variatie**, maar **niet per se 20 volledig unieke ads** — Meta's
+  eigen richtlijn (20+) is voor de meeste bedrijven onrealistisch en werkt verlammend. Beter
+  een creative-ritme dat je vol kan houden (bv. een paar echt verschillende ads + hook-
+  varianten daarop) dan een "perfect" streefgetal waar je nooit aan begint.
+  - Varieer daarbij niet alleen visueel, maar langs **inhoudelijke assen**: fase op de
+    awareness-ladder (probleem-onbewust → probleem-bewust → oplossing-bewust), verschillende
+    pijnpunten, verschillende verlangens (tijd besparen, status, gemak, ...), en verschillende
+    klant-avatars. Meta kan dan zelf personaliseren wie welke ad ziet.
 - Zorg voor een mix van **formats** (video, statics, carousel) — sneller/goedkoper om
   statics-variaties te maken dan video's, en verschillende mensen reageren op verschillende
   formats.
@@ -106,6 +189,11 @@ Kies op basis van persoonlijkheid — kan de gebruiker met rust blijven bij fluc
   Verklein het percentage naarmate budget groeit (bv. €800→€1.000 is maar +20%). Zo ontdek
   je je "scaling ceiling": het budgetniveau waarboven resultaten onder je doel-ROAS zakken.
 
+**Schaal creative mee met budget.** Meer budget betekent dat ads vaker én aan meer mensen
+getoond worden — een enkele ad die het goed doet bij een klein, warm publiek houdt dat niet
+automatisch vol bij 10x zoveel (kouder) publiek. Zorg dat nieuwe creative meeschaalt, niet
+alleen het budget.
+
 **Nooit doen:** een identieke campagne dupliceren naast de originele (auction overlap) of
 budget in één keer 5–10x verhogen. Als resultaten meteen instorten bij het opschalen: de ads
 converteren waarschijnlijk warm/hyper-responsief publiek prima, maar niet koud publiek op
@@ -119,30 +207,54 @@ geslacht, locatie, device, plaatsing, conversie-locatie) waarvan jouw CRM-data l
 het meer/minder waard is over de klantlevensduur. Reden: Meta's attributievenster ziet geen
 lifetime value, refund rates, of lead→klant-conversie — dat weet jij wél. Een value rule kan
 de cost-per-result verhogen; vaak een goede trade als het segment substantieel waardevoller
-is. (Meta test ook een "describe your audience"-AI-feature die vrije-tekst-beschrijvingen naar
-targeting-suggesties omzet — nog vroeg/bèta, beperkte impact zolang het puur suggesties zijn.)
+is. Werkt met meerdere criteria tegelijk (bv. leeftijd + locatie). (Meta test ook een "describe
+your audience"-AI-feature die vrije-tekst-beschrijvingen naar targeting-suggesties omzet — nog
+vroeg/bèta, beperkte impact zolang het puur suggesties zijn.)
+
+**Alleen als Meta structureel de verkeerde mensen bereikt** (en je dat met data kan
+onderbouwen) overweeg je de "further limit the reach of your ads"-optie: dat maakt leeftijd,
+geslacht en custom audiences harde constraints i.p.v. suggesties. Let op: **detailed
+targeting (interesses) blijft altijd een suggestie**, zelfs in die stand — dat kun je niet
+hard afdwingen. Verwacht een waarschuwing en een hogere cost-per-result; alleen doen met een
+concrete reden, niet als default.
 
 ## Retargeting: meestal geen apart ding meer (post-Andromeda)
 
-Grote strategiewijziging t.o.v. oudere adviezen: **losse cold- en warm-audience-campagnes zijn
-meestal overbodig.** Meta target sowieso je warme publiek binnen een "cold" ad set (en
-andersom) zodra custom audiences als *suggestie* zijn toegevoegd — niet als harde
-targeting-constraint. Twee identieke campagnes (één "cold", één "retargeting") laten in de
-praktijk vaak dezelfde spend-verdeling zien tussen nieuw/engaged/bestaande klanten.
+Zie ook Campagnestructuur hierboven — dit is dezelfde onderliggende logica toegepast op
+warm/koud publiek specifiek:
 
-- Gebruik daarom standaard **één hybride ad set** i.p.v. losse cold/warm-campagnes: betere
+- Gebruik standaard **één hybride ad set** i.p.v. losse cold/warm-campagnes: betere
   databundeling, geen auction overlap, en budget herverdeelt zich automatisch naarmate je
   warme publiek groeit.
 - **Definieer wel je audience segments** (advertising settings → engaged audience / existing
   customers) — kost een paar minuten, en geeft je zichtbaarheid (breakdown → audience
   segments) op de spend/resultaten-verdeling tussen nieuw/engaged/bestaand.
-- De **Meta pixel + custom audiences blijven belangrijk**: Meta ziet zelf niet alles (bv.
-  leadform-engagement ouder dan 90 dagen), dus externe klantenlijsten en pixeldata vullen aan
-  wat Meta niet kan zien.
-- Alleen een **losse, harde retargeting-ad set** opzetten (via "further limit the reach of
-  your ads", audience als hard constraint i.p.v. suggestie) als er een specifieke reden is:
-  een aanbod dat alleen bestaande klanten mogen zien, of een ascension-funnel-stap die alleen
-  voor een tussengroep bedoeld is.
+- De **Meta pixel + Conversions API + custom audiences blijven allebei nodig** (geen "of-of"):
+  Meta ziet zelf niet alles (bv. leadform-engagement ouder dan 90 dagen, of conversies buiten
+  het attributievenster), dus externe klantenlijsten en server-side tracking vullen aan wat
+  Meta niet kan zien. Kleine verbeteringen in data-nauwkeurigheid (een paar %) kunnen leiden
+  tot grote ROAS-verbeteringen, omdat Meta's AI steeds meer van de targeting/optimalisatie
+  overneemt en dus steeds gevoeliger is voor de kwaliteit van de input.
+- Alleen een **losse, harde retargeting-ad set** opzetten als er een specifieke reden is: een
+  aanbod dat alleen bestaande klanten mogen zien, of een ascension-funnel-stap die alleen voor
+  een tussengroep bedoeld is.
+
+## Plaatsingen (placements)
+
+- Bij een **echte** sales-/leads-campagne (juiste performance goal, zie hieronder) laat je
+  plaatsingen op **Advantage+/automatisch** staan — Meta vermijdt vanzelf lagekwaliteit-
+  plekken zoals Audience Network zodra het echt op conversies optimaliseert.
+  - **Performance goal-valkuil**: als je performance goal per ongeluk op "maximize number of
+    landing page views/link clicks" of "reach/impressions" staat i.p.v. een echte
+    conversie (sale/lead), gedraagt de campagne zich alsnog als traffic- of
+    awareness-campagne, ook al heet hij "sales" of "leads". Controleer dit altijd.
+  - Bekijk breakdown → placement om te zien waar resultaten/kosten vandaan komen — nuttig om
+    te begrijpen, maar niet per se een reden om handmatig te beperken bij een correct
+    ingestelde conversiecampagne.
+- **Beperk plaatsingen wél handmatig** bij awareness/traffic/engagement-campagnes (of een
+  leads/sales-campagne met de verkeerde performance goal): sluit Audience Network uit (goedkope,
+  lage-kwaliteit impressies) en focus op Facebook + Instagram feeds/stories/reels. Anders
+  koopt Meta veel goedkope, laagwaardige plekken puur om het (verkeerde) volumedoel te halen.
 
 ## Ad creative — concrete checklist
 
@@ -164,6 +276,9 @@ Uit een sessie waarin echte, door kijkers ingestuurde ads werden doorgelicht:
 - **"Stop the scroll" als opener is inmiddels afgezaagd** en voelt eerder opdringerig dan
   aantrekkelijk — vermijd clichématige aandacht-trekkers, kies een concrete hook in plaats
   van een generieke.
+- **Voel als content, niet als ad.** Ads die er in de eerste seconde uitzien als "content"
+  (UGC, native aan het platform) worden veel minder snel weggescrold dan iets dat meteen als
+  reclame herkenbaar is.
 - **Altijd een duidelijke, specifieke CTA/aanbod** — "shop nu" of "ontdek meer" is zwakker
   dan een concreet aanbod ("ontvang gratis product X bij aankoop van Y", "20% korting deze
   week").
@@ -174,6 +289,26 @@ Uit een sessie waarin echte, door kijkers ingestuurde ads werden doorgelicht:
   branding zodra dat kan.
 - **Test testimonial-plaatsing als aparte variabele**: een testimonial die in de creative zelf
   verwerkt zit vs. een losse versie zonder, of testimonial-eerst vs. product-eerst.
+
+## Extra verborgen instellingen die vaak gemist worden
+
+- **Ad scheduling** (campagne op lifetime budget zetten → ad set → "show more settings" →
+  schedule): laat ads alleen op specifieke dagen/tijden draaien. Vooral waardevol bij
+  leads-campagnes waar snelheid van opvolging telt (bv. alleen kantooruren voor een B2B-
+  dienst) — minder relevant bij e-commerce sales, waar een verkoop om 2 uur 's nachts even
+  veel waard is als overdag.
+- **"Combine social proof" aanzetten** (advertising settings → social information): bundelt
+  likes/reacties over vergelijkbare ad-varianten, zodat social proof niet versnipperd raakt
+  over bijna-identieke ads. Vrijwel altijd aanzetten.
+- **"Optimize text per person" aanzetten** (ad-niveau, bij standard enhancements): laat Meta
+  per kijker de beste combinatie van primary text/headline/description samenstellen i.p.v.
+  één vaste combinatie voor iedereen. Vul daarom meerdere varianten in per veld (tot 5).
+  **Uitzondering**: in zwaar gereguleerde sectoren waar exacte bewoording/volgorde
+  compliance-gevoelig is, kan dit risico's geven — dan uitlaten.
+- **Automated rules** kunnen ook triggeren op **frequency** (ad fatigue-signaal), niet alleen
+  op cost-per-result/ROAS — bv. automatisch een ad uitzetten zodra frequency boven een
+  drempel komt. Bij meerdere gestapelde regels: controleer regelmatig of ze nog doen wat je
+  bedoeld had, regels kunnen elkaar op onverwachte manieren beïnvloeden.
 
 ## Creative enhancements (Advantage+) — snelle defaults
 
@@ -230,7 +365,8 @@ een betrouwbaar signaal van een echte topper (Meta geeft budget alleen aan wat w
 onderscheidt echte winnaars van ads die toevallig lang "actief" stonden maar nauwelijks
 budget kregen. Bekijk niet alleen de creative, maar ook de landingspagina/funnel erachter.
 Kijk naar meerdere concurrenten; sla de ads over die je niet kan repliceren (groot
-influencer-budget, dure productie) en zoek vergelijkbare spelers waar dat wel kan.
+influencer-budget, dure productie) en zoek vergelijkbare spelers waar dat wel kan. Extra
+waardevol bij een klein budget, waar je zelf weinig ruimte hebt om te testen.
 
 ## Prijsmodel-strategie
 
@@ -256,6 +392,8 @@ jouw als de creator's account) geven gemiddeld **13% hogere CTR en 71% hogere br
   meerprijs, en dat levert veel meer waarde op dan alleen een organische post.
 - Doe due diligence: heeft de creator eerder negatief over vergelijkbare producten gepost?
   Past de creator bij je merkwaarden?
+- Vuistregel voor het budget: als een creator ~10% van je advertentiebudget kost maar je
+  campagne-effectiviteit met 40% verbetert, is dat een uitstekende ruil.
 
 ## WhatsApp-funnels
 
@@ -308,13 +446,20 @@ oplichting, kan je zelfs meer in de problemen brengen) en koop geen "seasoned" a
   "stop the scroll"-openers, wel een concrete, specifieke CTA.
 - **Bestaande campagne/ads beoordelen** → begin met het diagnose-raamwerk (conversies vs.
   hook rate/CTR vs. winstgevendheid), loop daarna het 5-levels-kader en de ad-creative-
-  checklist langs.
+  checklist langs. Check ook of ads met lage ROAS nog spend krijgen (funnel-rol) voor je
+  adviseert ze uit te zetten.
+- **Vraag over campagnestructuur** → adviseer standaard consolidatie (één campagne, één ad
+  set), met uitzonderingen alleen voor productranges en locatie.
 - **Vraag over targeting** → leg value rules uit i.p.v. smalle interesse-targeting; vraag
   naar CRM-data over welk segment waardevoller is.
 - **Vraag over retargeting** → adviseer standaard een hybride ad set i.p.v. losse warm/cold-
   campagnes, tenzij er een specifieke reden is voor exclusieve targeting.
+- **Vraag over plaatsingen** → check eerst of het écht een conversiecampagne is (juiste
+  performance goal); zo ja, laat Advantage+ placements met rust; zo nee, beperk handmatig.
 - **Vraag over opschalen** → vraag naar budget, resultaten, en tinker-geneigdheid; adviseer
-  optie 1 (automated) of optie 2 (manueel).
+  optie 1 (automated) of optie 2 (manueel), en wijs erop dat creative moet meeschalen.
+- **Klein budget** → loop de "Klein budget"-sectie langs: niche hard, leun op Ads Library,
+  geen brand-awareness, hergebruik organische content, reken de klant-LTV uit.
 - **"Learning limited" of instabiele resultaten** → volg de fix-volgorde: campagne
   verbeteren, consolideren, evt. hogere-in-de-funnel event, stoppen met tinkeren.
 - **Nieuw/net-gestart account** → loop de "Nieuwe ad accounts"-sectie langs (geen boosted
@@ -322,8 +467,13 @@ oplichting, kan je zelfs meer in de problemen brengen) en koop geen "seasoned" a
   **Ad account geblokkeerd** → loop de herstelstappen langs, waarschuw tegen betaalde
   "herstel"-diensten.
 
+**Blijf kritisch op "alleen de instellingen goed zetten is genoeg".** Ben Heath benadrukt zelf
+dat de bedrijven met de beste resultaten altijd íets extra's hebben buiten het ad-account:
+een sterker merk, een beter aanbod, een persoonlijk merk. Goede instellingen zijn een
+randvoorwaarde, geen garantie.
+
 ## Bron
 
-Gedistilleerd uit de 20 meest recente publieke YouTube-video's van Ben Heath (Heath Media,
-`youtube.com/@BenHeath`) — bedoeld voor eigen analyse en het schrijven van eigen advertenties,
-niet om zijn video's letterlijk te herpubliceren.
+Gedistilleerd uit 50 publieke YouTube-video's van Ben Heath (Heath Media, `youtube.com/
+@BenHeath`) — bedoeld voor eigen analyse en het schrijven van eigen advertenties, niet om zijn
+video's letterlijk te herpubliceren.
