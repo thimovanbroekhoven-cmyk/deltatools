@@ -146,6 +146,13 @@
           </div>
         </div>
 
+        {%- comment -%}
+          Celine Beaumont: free Canadian shipping on all orders — shown whenever the cart has items.
+        {%- endcomment -%}
+        <p class="cart-drawer__free-shipping">
+          <span class="svg-wrapper" aria-hidden="true">{{ 'icon-checkmark.svg' | inline_asset_content }}</span>
+          {{ 'celine.cart.free_shipping_unlocked' | t }}
+        </p>
       {%- endif -%}
 
       <cart-drawer-items
@@ -155,16 +162,6 @@
           class=" is-empty"
         {% endif %}
       >
-        {%- if cart != empty -%}
-          {%- comment -%}
-            Celine Beaumont: the brief ships free Canadian shipping on all orders, so this banner
-            has no threshold to gate on — it's shown whenever the cart has items.
-          {%- endcomment -%}
-          <p class="cart-drawer__free-shipping">
-            <span class="svg-wrapper" aria-hidden="true">{{ 'icon-checkmark.svg' | inline_asset_content }}</span>
-            {{ 'celine.cart.free_shipping_unlocked' | t }}
-          </p>
-        {%- endif -%}
         <form
           action="{{ routes.cart_url }}"
           id="CartDrawer-Form"
@@ -595,6 +592,7 @@
           </div>
           <div id="CartDrawer-CartErrors" role="alert"></div>
         </form>
+      </cart-drawer-items>
       {%- comment -%}
         Celine Beaumont: "People also bought" — a horizontally scrollable row of up to 4 *different*
         available products from the same collection as the cart (skipping anything already in the
@@ -700,7 +698,6 @@
           </div>
         {%- endif -%}
       {%- endif -%}
-      </cart-drawer-items>
       <div class="drawer__footer">
         {%- if settings.show_cart_note -%}
           <details id="Details-CartDrawer">

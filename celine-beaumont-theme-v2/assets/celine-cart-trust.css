@@ -69,20 +69,10 @@
 }
 
 /* -----------------------------------------------------------------------
-   Pinned checkout footer.
-   The carousel now lives inside <cart-drawer-items> (the scrolling middle),
-   so only the header stays fixed at the top and the footer — total, trust
-   rows, checkout button and payment logos — stays pinned at the bottom,
-   with the cart items + carousel scrolling between them (like the reference).
-   min-height:0 lets the scroll area shrink so the footer never gets clipped.
-   ----------------------------------------------------------------------- */
-.cart-drawer cart-drawer-items {
-  min-height: 0;
-}
-
-/* -----------------------------------------------------------------------
    "People also bought" — a horizontally scrollable row of up to 4 products
-   from the same collection, inside the scrolling area, above the footer.
+   from the same collection, shown as a compact band between the scrolling
+   item list and the pinned checkout footer (Dawn's default flex layout keeps
+   the footer pinned; the item list scrolls above this band).
    Horizontal card: fixed square image on the left (so every card is exactly
    the same size), title + was/now price + Add button on the right. Cards are
    ~85% wide so the next one peeks, inviting the swipe.
