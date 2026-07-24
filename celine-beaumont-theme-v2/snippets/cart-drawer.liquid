@@ -705,6 +705,46 @@
           </div>
         {%- endif -%}
       {%- endif -%}
+
+      {%- comment -%}
+        Celine Beaumont: reassurance rows + accepted payment methods sit at the BOTTOM of the
+        scrollable area (not in the pinned footer) so the fixed checkout bar stays slim — just the
+        total and the button, like the icon-amsterdam cart. They still read right before checkout.
+      {%- endcomment -%}
+      {%- if cart != empty -%}
+        <ul class="cart-drawer__trust list-unstyled" role="list">
+          <li class="cart-drawer__trust-item">
+            <span class="svg-wrapper cart-drawer__trust-icon" aria-hidden="true">
+              {{- 'icon-stopwatch.svg' | inline_asset_content -}}
+            </span>
+            <span>Ships within 1–2 business days</span>
+          </li>
+          <li class="cart-drawer__trust-item">
+            <span class="svg-wrapper cart-drawer__trust-icon" aria-hidden="true">
+              {{- 'icon-truck.svg' | inline_asset_content -}}
+            </span>
+            <span>Free shipping on every order</span>
+          </li>
+          <li class="cart-drawer__trust-item">
+            <span class="svg-wrapper cart-drawer__trust-icon" aria-hidden="true">
+              {{- 'icon-return.svg' | inline_asset_content -}}
+            </span>
+            <span>30-day returns</span>
+          </li>
+        </ul>
+        {%- if shop.enabled_payment_types.size > 0 -%}
+          <div class="cart-drawer__payment">
+            <span class="visually-hidden">{{ 'sections.footer.payment' | t }}</span>
+            <ul class="list list-payment cart-drawer__payment-list" role="list">
+              {%- for type in shop.enabled_payment_types -%}
+                <li class="list-payment__item">
+                  {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+      {%- endif -%}
       </div>
       {%- comment -%} Celine Beaumont: end .cart-drawer__scroll — the checkout footer below stays pinned {%- endcomment -%}
       <div class="drawer__footer">
@@ -759,35 +799,6 @@
           {%- endcomment -%}
         </div>
 
-        {%- comment -%}
-          Celine Beaumont: reassurance rows answer the three questions that stall shoppers at the
-          cart — when it ships, whether it's returnable, and (via the payment logos below the button)
-          whether paying here is safe. Kept compact, one line each, no frames/accent colours, and
-          only shown with items in the cart so the checkout button stays above the fold on mobile.
-        {%- endcomment -%}
-        {%- if cart != empty -%}
-          <ul class="cart-drawer__trust list-unstyled" role="list">
-            <li class="cart-drawer__trust-item">
-              <span class="svg-wrapper cart-drawer__trust-icon" aria-hidden="true">
-                {{- 'icon-stopwatch.svg' | inline_asset_content -}}
-              </span>
-              <span>Ships within 1–2 business days</span>
-            </li>
-            <li class="cart-drawer__trust-item">
-              <span class="svg-wrapper cart-drawer__trust-icon" aria-hidden="true">
-                {{- 'icon-truck.svg' | inline_asset_content -}}
-              </span>
-              <span>Free shipping on every order</span>
-            </li>
-            <li class="cart-drawer__trust-item">
-              <span class="svg-wrapper cart-drawer__trust-icon" aria-hidden="true">
-                {{- 'icon-return.svg' | inline_asset_content -}}
-              </span>
-              <span>30-day returns</span>
-            </li>
-          </ul>
-        {%- endif -%}
-
         <!-- CTAs -->
 
         <div class="cart__ctas" {{ block.shopify_attributes }}>
@@ -803,24 +814,6 @@
           >
             {{ 'sections.cart.checkout' | t }}
           </button>
-
-          {%- comment -%}
-            Celine Beaumont: accepted payment methods, centred + small + greyed, directly under the
-            checkout button. Uses shop.enabled_payment_types with Shopify's own SVGs (Dawn's
-            list-payment markup) so it always mirrors exactly what's enabled in Settings > Payments.
-          {%- endcomment -%}
-          {%- if cart != empty and shop.enabled_payment_types.size > 0 -%}
-            <div class="cart-drawer__payment">
-              <span class="visually-hidden">{{ 'sections.footer.payment' | t }}</span>
-              <ul class="list list-payment cart-drawer__payment-list" role="list">
-                {%- for type in shop.enabled_payment_types -%}
-                  <li class="list-payment__item">
-                    {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
-                  </li>
-                {%- endfor -%}
-              </ul>
-            </div>
-          {%- endif -%}
 
           <a href="{{ routes.all_products_collection_url }}" class="cart-drawer__continue-link link">
             {{ 'celine.cart.continue_shopping' | t }}

@@ -27,6 +27,7 @@
       would otherwise switch the whole inner to overflow:scroll and unpin the
       footer, so we hold it to overflow:hidden.
    ----------------------------------------------------------------------- */
+cart-drawer.drawer,
 cart-drawer .drawer__inner {
   height: 100dvh;
 }
@@ -54,15 +55,36 @@ cart-drawer.is-empty .drawer__footer {
 }
 
 /* -----------------------------------------------------------------------
-   Trust reassurance rows — directly above the checkout button.
-   Compact, one line each, icon left, no frames, no accent colour.
+   Compact the pinned footer. Everything below the scroll region is fixed,
+   so keep it tight: less padding around the block, smaller gaps between the
+   total / trust rows / button / payment / continue link, so the checkout
+   button sits higher and the scrolling item list gets more room.
+   ----------------------------------------------------------------------- */
+cart-drawer .drawer__footer {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+cart-drawer .cart-drawer__footer > * + * {
+  margin-top: 0.4rem;
+}
+
+cart-drawer .cart__ctas > * + * {
+  margin-top: 0.8rem;
+}
+
+/* -----------------------------------------------------------------------
+   Trust reassurance rows — now at the bottom of the scroll area.
+   Compact, one line each, icon left, a hairline above to separate.
    ----------------------------------------------------------------------- */
 .cart-drawer__trust {
-  margin: 1.6rem 2rem 1.2rem;
-  padding: 0;
+  margin: 0 2rem;
+  padding: 1.4rem 0 0;
+  border-top: 1px solid var(--celine-hairline);
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.5rem;
+  list-style: none;
 }
 
 .cart-drawer__trust-item {
@@ -70,30 +92,30 @@ cart-drawer.is-empty .drawer__footer {
   align-items: center;
   gap: 0.8rem;
   margin: 0;
-  font-size: 1.3rem;
-  line-height: 1.3;
+  font-size: 1.25rem;
+  line-height: 1.25;
   color: var(--celine-body);
 }
 
 .cart-drawer__trust-icon {
   flex: 0 0 auto;
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 1.6rem;
+  height: 1.6rem;
   color: var(--celine-muted);
 }
 
 .cart-drawer__trust-icon svg {
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 1.6rem;
+  height: 1.6rem;
 }
 
 /* -----------------------------------------------------------------------
-   Payment methods — directly under the checkout button. Centred, small,
+   Payment methods — below the trust rows in the scroll area. Centred, small,
    greyed (Shopify's own colour SVGs desaturated) so they reassure without
    competing with the CTA.
    ----------------------------------------------------------------------- */
 .cart-drawer__payment {
-  margin-top: 1.2rem;
+  margin: 1rem 2rem 1.6rem;
 }
 
 .cart-drawer__payment-list.list-payment {
@@ -103,34 +125,32 @@ cart-drawer.is-empty .drawer__footer {
 }
 
 .cart-drawer__payment-list .list-payment__item {
-  padding: 0.3rem;
+  padding: 0.2rem;
 }
 
 .cart-drawer__payment-list .icon {
-  width: 3.2rem;
+  width: 2.8rem;
   height: auto;
   filter: grayscale(1);
   opacity: 0.55;
 }
 
-/* -----------------------------------------------------------------------
+/* ----------------------------------------------------------------------
    "People also bought" — a horizontally scrollable row of up to 4 products
-   from the same collection, shown as a compact band between the scrolling
-   item list and the pinned checkout footer (Dawn's default flex layout keeps
-   the footer pinned; the item list scrolls above this band).
-   Horizontal card: fixed square image on the left (so every card is exactly
-   the same size), title + was/now price + Add button on the right. Cards are
-   ~85% wide so the next one peeks, inviting the swipe.
-   ----------------------------------------------------------------------- */
+   from the same collection, shown as a compact band at the bottom of the
+   scroll area. Horizontal card: fixed square image on the left (so every
+   card is exactly the same size), title + was/now price + Add button on the
+   right. Cards are ~85% wide so the next one peeks, inviting the swipe.
+   ---------------------------------------------------------------------- */
 .cart-drawer__upsell {
   margin: 0 2rem;
-  padding: 1.6rem 0 0.4rem;
+  padding: 1.4rem 0 0.2rem;
   border-top: 1px solid var(--celine-hairline);
 }
 
 .cart-drawer__upsell-heading {
-  margin: 0 0 1.2rem;
-  font-size: 1.3rem;
+  margin: 0 0 1rem;
+  font-size: 1.2rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--celine-ink);
@@ -160,8 +180,8 @@ cart-drawer.is-empty .drawer__footer {
 
 .cart-drawer__upsell-media {
   flex: 0 0 auto;
-  width: 7.2rem;
-  height: 7.2rem;
+  width: 6rem;
+  height: 6rem;
   display: block;
   overflow: hidden;
   background: var(--celine-cream);
