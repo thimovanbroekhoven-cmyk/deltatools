@@ -80,6 +80,13 @@
           </span>
         </button>
       </div>
+      {%- comment -%}
+        Celine Beaumont: single scroll region. Everything between the pinned header and the pinned
+        checkout footer lives in this real <div> and is the ONLY thing that scrolls. Using a plain
+        div (not the cart-drawer-items custom element) as the scroller avoids the iOS Safari bug
+        where a squeezed custom element stops clipping and its content overlaps the next block.
+      {%- endcomment -%}
+      <div class="cart-drawer__scroll">
       {%- if cart != empty -%}
         {%- comment -%}
           Celine Beaumont: tiered-discount progress bar. This is presentational only — it reflects
@@ -698,6 +705,8 @@
           </div>
         {%- endif -%}
       {%- endif -%}
+      </div>
+      {%- comment -%} Celine Beaumont: end .cart-drawer__scroll — the checkout footer below stays pinned {%- endcomment -%}
       <div class="drawer__footer">
         {%- if settings.show_cart_note -%}
           <details id="Details-CartDrawer">

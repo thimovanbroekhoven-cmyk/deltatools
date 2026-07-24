@@ -9,39 +9,48 @@
    ========================================================================== */
 
 /* -----------------------------------------------------------------------
-   iOS-safe scrolling + pinned header/footer.
-   Relying on cart-drawer-items (a custom element) as the flex scroll container
-   fails on iOS Safari when it gets squeezed: it stops clipping and its content
-   overlaps whatever comes next. Instead the WHOLE drawer scrolls (drawer__inner)
-   and the header + checkout footer are pinned with position: sticky, so nothing
-   can overlap. 100dvh sizes the drawer to the visible viewport so it fills the
-   screen and nothing hides behind Safari's bottom toolbar. Falls back to Dawn's
-   height:100% where dvh is unsupported.
+   Layout — pinned checkout footer, one scroll region (like icon-amsterdam).
+   Dawn already makes .drawer__inner a flex column with the footer pinned at
+   the bottom; we keep that and only fix two things:
+
+   1. iOS viewport. Dawn sizes the drawer with height:100%, which on iOS Safari
+      resolves to the LARGE viewport (behind the bottom toolbar), hiding the
+      checkout footer. 100dvh sizes it to the visible viewport instead.
+
+   2. One real scroll region. All the content between the header and the footer
+      is wrapped in .cart-drawer__scroll (a plain <div>), which is the single
+      scrolling element — header pinned on top, checkout footer pinned at the
+      bottom, everything else (cart items + People-also-bought) scrolls between
+      them. Using a normal div rather than the cart-drawer-items custom element
+      as the scroller avoids the iOS bug where a squeezed custom element stops
+      clipping and paints over the next block. Dawn's max-height:650px rule
+      would otherwise switch the whole inner to overflow:scroll and unpin the
+      footer, so we hold it to overflow:hidden.
    ----------------------------------------------------------------------- */
 cart-drawer .drawer__inner {
   height: 100dvh;
+}
+
+.cart-drawer__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
 cart-drawer cart-drawer-items {
+  display: block;
   overflow: visible;
-  flex: 1 0 auto;
 }
 
-cart-drawer .drawer__header,
-cart-drawer .drawer__footer {
-  position: sticky;
-  z-index: 2;
-  background: rgb(var(--color-background));
+cart-drawer.is-empty .drawer__footer {
+  display: none;
 }
 
-cart-drawer .drawer__header {
-  top: 0;
-}
-
-cart-drawer .drawer__footer {
-  bottom: 0;
+@media screen and (max-height: 650px) {
+  cart-drawer .drawer__inner {
+    overflow: hidden;
+  }
 }
 
 /* -----------------------------------------------------------------------
