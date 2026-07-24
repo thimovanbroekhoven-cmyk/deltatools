@@ -9,21 +9,39 @@
    ========================================================================== */
 
 /* -----------------------------------------------------------------------
-   iOS viewport fix + pinned footer.
-   Dawn sizes the drawer with height:100%, which on iOS Safari resolves to the
-   LARGE viewport (the area behind the bottom toolbar), so the pinned checkout
-   footer ends up hidden behind Safari's toolbar and the drawer leaves a gap.
-   Sizing the flex column to 100dvh (the visible/dynamic viewport) makes the
-   drawer fill the screen and keeps the footer in view; min-height:0 lets the
-   item list shrink so it scrolls and the footer stays pinned. Falls back to
-   Dawn's height:100% where dvh is unsupported.
+   iOS-safe scrolling + pinned header/footer.
+   Relying on cart-drawer-items (a custom element) as the flex scroll container
+   fails on iOS Safari when it gets squeezed: it stops clipping and its content
+   overlaps whatever comes next. Instead the WHOLE drawer scrolls (drawer__inner)
+   and the header + checkout footer are pinned with position: sticky, so nothing
+   can overlap. 100dvh sizes the drawer to the visible viewport so it fills the
+   screen and nothing hides behind Safari's bottom toolbar. Falls back to Dawn's
+   height:100% where dvh is unsupported.
    ----------------------------------------------------------------------- */
 cart-drawer .drawer__inner {
   height: 100dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 cart-drawer cart-drawer-items {
-  min-height: 0;
+  overflow: visible;
+  flex: 1 0 auto;
+}
+
+cart-drawer .drawer__header,
+cart-drawer .drawer__footer {
+  position: sticky;
+  z-index: 2;
+  background: rgb(var(--color-background));
+}
+
+cart-drawer .drawer__header {
+  top: 0;
+}
+
+cart-drawer .drawer__footer {
+  bottom: 0;
 }
 
 /* -----------------------------------------------------------------------
