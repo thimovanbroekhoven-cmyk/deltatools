@@ -69,6 +69,10 @@ cart-drawer .cart-drawer__footer > * + * {
   margin-top: 0.4rem;
 }
 
+cart-drawer .cart__ctas {
+  margin-top: 1.6rem;
+}
+
 cart-drawer .cart__ctas > * + * {
   margin-top: 0.8rem;
 }
