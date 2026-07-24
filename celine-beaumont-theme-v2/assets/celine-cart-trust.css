@@ -1,10 +1,11 @@
 /* ==========================================================================
    Celine Beaumont — cart drawer trust signals
-   Additive styles for the reassurance block, payment logos and cross-sell
-   suggestion added to snippets/cart-drawer.liquid. Loaded from that snippet.
-   Uses existing brand tokens from celine-theme.css (--celine-*) and Dawn's
-   color-scheme variables — no new fonts, colours or libraries. Fully
-   reversible: delete this file + its stylesheet_tag and the drawer markup.
+   Additive styles for the reassurance block, payment logos and the
+   "People also bought" carousel added to snippets/cart-drawer.liquid.
+   Loaded from that snippet. Uses existing brand tokens from celine-theme.css
+   (--celine-*) and Dawn's color-scheme variables — no new fonts, colours or
+   libraries. Fully reversible: delete this file + its stylesheet_tag and the
+   drawer markup.
    ========================================================================== */
 
 /* -----------------------------------------------------------------------
@@ -68,50 +69,59 @@
 }
 
 /* -----------------------------------------------------------------------
-   Cross-sell suggestion — a *different* product from the same collection,
-   shown in the tiered-discount area so the next tier is a real second buy.
+   "People also bought" — a horizontally scrollable row of up to 4 different
+   products from the same collection, shown between the cart items and the
+   footer. Cards are ~60% wide so the next one peeks, inviting the swipe.
    ----------------------------------------------------------------------- */
-.cart-drawer__suggestion {
-  margin: 1.2rem 2rem 0;
-  padding-top: 1.2rem;
+.cart-drawer__upsell {
+  margin: 0 2rem;
+  padding: 1.6rem 0 0.4rem;
   border-top: 1px solid var(--celine-hairline);
 }
 
-.cart-drawer__suggestion-heading {
-  margin: 0 0 0.8rem;
-  font-size: 1.2rem;
+.cart-drawer__upsell-heading {
+  margin: 0 0 1.2rem;
+  font-size: 1.3rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--celine-muted-text);
+  letter-spacing: 0.1em;
+  color: var(--celine-ink);
 }
 
-.cart-drawer__suggestion-card {
+.cart-drawer__upsell-track {
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  gap: 1.2rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -2rem;
+  padding: 0 2rem 0.8rem;
 }
 
-.cart-drawer__suggestion-media {
+.cart-drawer__upsell-card {
   flex: 0 0 auto;
-  width: 4.8rem;
-  line-height: 0;
-}
-
-.cart-drawer__suggestion-media img {
-  display: block;
-  width: 4.8rem;
-  height: auto;
-}
-
-.cart-drawer__suggestion-info {
-  flex: 1 1 auto;
-  min-width: 0;
+  width: 60%;
+  max-width: 20rem;
+  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
 }
 
-.cart-drawer__suggestion-title {
+.cart-drawer__upsell-media {
+  display: block;
+  line-height: 0;
+  margin-bottom: 0.8rem;
+  background: var(--celine-cream);
+}
+
+.cart-drawer__upsell-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.cart-drawer__upsell-title {
+  margin: 0 0 0.4rem;
   font-size: 1.3rem;
   line-height: 1.3;
   color: rgb(var(--color-foreground));
@@ -122,26 +132,48 @@
   overflow: hidden;
 }
 
-.cart-drawer__suggestion-price {
-  font-size: 1.3rem;
+.cart-drawer__upsell-prices {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.8rem;
+}
+
+.cart-drawer__upsell-was {
+  font-size: 1.2rem;
   color: var(--celine-muted-text);
 }
 
-.cart-drawer__suggestion-form {
-  flex: 0 0 auto;
+.cart-drawer__upsell-price {
+  font-size: 1.3rem;
+  color: rgb(var(--color-foreground));
 }
 
-.cart-drawer__suggestion-add.button {
+.cart-drawer__upsell-form {
+  margin-top: auto;
+}
+
+.cart-drawer__upsell-add.button {
+  width: 100%;
   min-height: 4rem;
-  padding: 0.8rem 1.6rem;
-  white-space: nowrap;
+  padding: 0.9rem 1rem;
+}
+
+.cart-drawer__upsell-track::-webkit-scrollbar {
+  height: 3px;
+}
+
+.cart-drawer__upsell-track::-webkit-scrollbar-thumb {
+  background-color: rgba(var(--color-foreground), 0.4);
+  border-radius: 100px;
 }
 
 /* -----------------------------------------------------------------------
    Reachable bottom on shorter screens.
    The default Dawn drawer pins the footer and only scrolls the item list,
    inside a height:100% / overflow:hidden container. With the added trust
-   rows, payment logos and suggestion the fixed content can exceed a phone
+   rows, payment logos and carousel the fixed content can exceed a phone
    viewport, clipping the checkout button / payment logos at the bottom.
    Dawn already switches the WHOLE drawer to scroll at max-height:650px; we
    raise that threshold so the bottom stays reachable on typical phones.

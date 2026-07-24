@@ -9,12 +9,12 @@
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
 {% comment %} Celine Beaumont: payment-method icons under the checkout button reuse Dawn's list-payment styles {% endcomment %}
 {{ 'component-list-payment.css' | asset_url | stylesheet_tag }}
-{% comment %} Celine Beaumont: trust rows, payment logos & cross-sell suggestion styles {% endcomment %}
+{% comment %} Celine Beaumont: trust rows, payment logos & People-also-bought carousel styles {% endcomment %}
 {{ 'celine-cart-trust.css' | asset_url | stylesheet_tag }}
 
 <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
-{% comment %} Celine Beaumont: powers the AJAX "Add" on the in-cart product suggestion {% endcomment %}
+{% comment %} Celine Beaumont: powers the AJAX "Add" on the People-also-bought cards {% endcomment %}
 <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
 
 <style>
@@ -145,93 +145,6 @@
             <span>{{ 'celine.cart.progress_tier_20' | t }}</span>
           </div>
         </div>
-
-        {%- comment -%}
-          Celine Beaumont: in-cart product suggestion. The tiered bar used to push shoppers to add a
-          second of the SAME item to reach the next discount tier — nobody buys 2× the same set in the
-          same colour/size. Instead we surface a *different* available product from the same collection,
-          with image + AJAX "Add", so reaching the next tier is a genuine second purchase. Falls back to
-          nothing (renders no block) if no suitable product is found or the top tier is already reached.
-        {%- endcomment -%}
-        {%- liquid
-          assign suggested_product = null
-          if tier_4_done == false
-            assign source_product = cart.items.first.product
-
-            assign cart_product_ids = ''
-            for line in cart.items
-              assign cart_product_ids = cart_product_ids | append: '|' | append: line.product.id | append: '|'
-            endfor
-
-            assign source_collection = null
-            for collection in source_product.collections
-              if collection.all_products_count > 1
-                assign source_collection = collection
-                break
-              endif
-            endfor
-            if source_collection == null
-              assign source_collection = source_product.collections.first
-            endif
-
-            if source_collection != blank
-              for candidate in source_collection.products limit: 24
-                assign candidate_id_test = '|' | append: candidate.id | append: '|'
-                unless cart_product_ids contains candidate_id_test
-                  if candidate.available and candidate.selected_or_first_available_variant != null
-                    assign suggested_product = candidate
-                    break
-                  endif
-                endunless
-              endfor
-            endif
-          endif
-        -%}
-        {%- if suggested_product != blank -%}
-          {%- assign suggested_variant = suggested_product.selected_or_first_available_variant -%}
-          <div class="cart-drawer__suggestion">
-            <p class="cart-drawer__suggestion-heading">You may also like</p>
-            <div class="cart-drawer__suggestion-card">
-              <a
-                href="{{ suggested_product.url }}"
-                class="cart-drawer__suggestion-media"
-                tabindex="-1"
-                aria-hidden="true"
-              >
-                {%- if suggested_product.featured_image -%}
-                  <img
-                    src="{{ suggested_product.featured_image | image_url: width: 120 }}"
-                    alt=""
-                    loading="lazy"
-                    width="60"
-                    height="{{ 60 | divided_by: suggested_product.featured_image.aspect_ratio | ceil }}"
-                  >
-                {%- endif -%}
-              </a>
-              <div class="cart-drawer__suggestion-info">
-                <a href="{{ suggested_product.url }}" class="cart-drawer__suggestion-title">
-                  {{- suggested_product.title | escape -}}
-                </a>
-                <span class="cart-drawer__suggestion-price">{{ suggested_variant.price | money }}</span>
-              </div>
-              <product-form class="cart-drawer__suggestion-form" data-hide-errors="true">
-                {%- form 'product', suggested_product, id: 'CartDrawerSuggestionForm', class: 'form', novalidate: 'novalidate' -%}
-                  <input type="hidden" name="id" value="{{ suggested_variant.id }}">
-                  <input type="hidden" name="quantity" value="1">
-                  <button
-                    type="submit"
-                    name="add"
-                    class="cart-drawer__suggestion-add button button--tertiary"
-                    aria-label="Add {{ suggested_product.title | escape }} to cart"
-                  >
-                    <span>Add</span>
-                    {%- render 'loading-spinner' -%}
-                  </button>
-                {%- endform -%}
-              </product-form>
-            </div>
-          </div>
-        {%- endif -%}
 
         {%- comment -%}
           Celine Beaumont: the brief ships free Canadian shipping on all orders, so this banner
@@ -681,7 +594,109 @@
           </div>
           <div id="CartDrawer-CartErrors" role="alert"></div>
         </form>
-      </cart-drawer-items>
+      {%- comment -%}
+        Celine Beaumont: "People also bought" — a horizontally scrollable row of up to 4 *different*
+        available products from the same collection as the cart (skipping anything already in the
+        cart). Each card has image, was/now price and an AJAX "Add +" that adds to cart and re-renders
+        the drawer in place via the theme's existing <product-form> (no reload, no new library).
+        Renders nothing if the cart is empty or no suitable products are found.
+      {%- endcomment -%}
+      {%- if cart != empty -%}
+        {%- liquid
+          assign cart_product_ids = ''
+          for line in cart.items
+            assign cart_product_ids = cart_product_ids | append: '|' | append: line.product.id | append: '|'
+          endfor
+
+          assign source_product = cart.items.first.product
+          assign upsell_collection = null
+          for collection in source_product.collections
+            if collection.all_products_count > 1
+              assign upsell_collection = collection
+              break
+            endif
+          endfor
+          if upsell_collection == null
+            assign upsell_collection = source_product.collections.first
+          endif
+
+          assign upsell_available = 0
+          if upsell_collection != blank
+            for candidate in upsell_collection.products limit: 50
+              if upsell_available >= 4
+                break
+              endif
+              assign candidate_id_test = '|' | append: candidate.id | append: '|'
+              unless cart_product_ids contains candidate_id_test
+                if candidate.available and candidate.selected_or_first_available_variant != null
+                  assign upsell_available = upsell_available | plus: 1
+                endif
+              endunless
+            endfor
+          endif
+        -%}
+        {%- if upsell_available > 0 -%}
+          <div class="cart-drawer__upsell">
+            <p class="cart-drawer__upsell-heading">People also bought</p>
+            <div class="cart-drawer__upsell-track">
+              {%- assign upsell_shown = 0 -%}
+              {%- for candidate in upsell_collection.products limit: 50 -%}
+                {%- if upsell_shown >= 4 -%}{%- break -%}{%- endif -%}
+                {%- assign candidate_id_test = '|' | append: candidate.id | append: '|' -%}
+                {%- unless cart_product_ids contains candidate_id_test -%}
+                  {%- if candidate.available and candidate.selected_or_first_available_variant != null -%}
+                    {%- assign upsell_variant = candidate.selected_or_first_available_variant -%}
+                    {%- assign upsell_form_id = 'CartUpsellForm-' | append: candidate.id -%}
+                    <div class="cart-drawer__upsell-card">
+                      <a
+                        href="{{ candidate.url }}"
+                        class="cart-drawer__upsell-media"
+                        tabindex="-1"
+                        aria-hidden="true"
+                      >
+                        {%- if candidate.featured_image -%}
+                          <img
+                            src="{{ candidate.featured_image | image_url: width: 300 }}"
+                            alt=""
+                            loading="lazy"
+                            width="150"
+                            height="{{ 150 | divided_by: candidate.featured_image.aspect_ratio | ceil }}"
+                          >
+                        {%- endif -%}
+                      </a>
+                      <a href="{{ candidate.url }}" class="cart-drawer__upsell-title">
+                        {{- candidate.title | escape -}}
+                      </a>
+                      <div class="cart-drawer__upsell-prices">
+                        {%- if upsell_variant.compare_at_price and upsell_variant.compare_at_price > upsell_variant.price -%}
+                          <s class="cart-drawer__upsell-was">{{ upsell_variant.compare_at_price | money }}</s>
+                        {%- endif -%}
+                        <span class="cart-drawer__upsell-price">{{ upsell_variant.price | money }}</span>
+                      </div>
+                      <product-form class="cart-drawer__upsell-form" data-hide-errors="true">
+                        {%- form 'product', candidate, id: upsell_form_id, class: 'form', novalidate: 'novalidate' -%}
+                          <input type="hidden" name="id" value="{{ upsell_variant.id }}">
+                          <input type="hidden" name="quantity" value="1">
+                          <button
+                            type="submit"
+                            name="add"
+                            class="cart-drawer__upsell-add button"
+                            aria-label="Add {{ candidate.title | escape }} to cart"
+                          >
+                            <span>Add +</span>
+                            {%- render 'loading-spinner' -%}
+                          </button>
+                        {%- endform -%}
+                      </product-form>
+                    </div>
+                    {%- assign upsell_shown = upsell_shown | plus: 1 -%}
+                  {%- endif -%}
+                {%- endunless -%}
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endif -%}
       <div class="drawer__footer">
         {%- if settings.show_cart_note -%}
           <details id="Details-CartDrawer">

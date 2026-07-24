@@ -25,13 +25,14 @@ intact. Customer-facing copy is English. No arrival-date promises (shipping time
    Dawn tax/duty note ("Taxes and shipping calculated at checkout") was removed — the store
    charges no tax and ships free, so it had nothing to calculate. (Left as a documented
    comment so it can be restored if a tax is ever configured.)
-4. **Bundle bar kept, suggestion improved**: the tiered-discount progress bar stays. Added
-   an in-cart **cross-sell**: a *different* available product from the same collection
-   (image + price + AJAX **Add**) so the shopper can genuinely reach the next tier instead
-   of being nudged toward 2× the identical set. Uses the theme's existing `<product-form>`
-   (product-form.js) which adds to cart and re-renders the drawer in place — no page
-   reload, no new library. Renders nothing if no suitable product exists or the top tier
-   is already reached.
+4. **Bundle bar kept, "People also bought" carousel added**: the tiered-discount progress
+   bar stays. Below the cart items sits a **horizontally scrollable row of up to 4 different**
+   available products from the same collection (skipping anything already in the cart), each
+   card with image, was/now price and an AJAX **Add +** button. Cards are ~60% wide so the
+   next one peeks, inviting the swipe (like the icon-amsterdam reference). Uses the theme's
+   existing `<product-form>` (product-form.js) which adds to cart and re-renders the drawer
+   in place — no page reload, no new library. Renders nothing if no suitable products exist.
+   (This replaced the earlier single-product suggestion.)
 5. **Compare-at ("was") price on cart line items**: when a variant has a compare-at price
    higher than its selling price, the cart now shows the old price struck through next to
    the current price (reusing Dawn's `cart-item__discounted-prices` / `cart-item__old-price`
