@@ -136,3 +136,22 @@
   padding: 0.8rem 1.6rem;
   white-space: nowrap;
 }
+
+/* -----------------------------------------------------------------------
+   Reachable bottom on shorter screens.
+   The default Dawn drawer pins the footer and only scrolls the item list,
+   inside a height:100% / overflow:hidden container. With the added trust
+   rows, payment logos and suggestion the fixed content can exceed a phone
+   viewport, clipping the checkout button / payment logos at the bottom.
+   Dawn already switches the WHOLE drawer to scroll at max-height:650px; we
+   raise that threshold so the bottom stays reachable on typical phones.
+   ----------------------------------------------------------------------- */
+@media screen and (max-height: 900px) {
+  cart-drawer:not(.is-empty) cart-drawer-items {
+    overflow: visible;
+  }
+
+  cart-drawer:not(.is-empty) .drawer__inner {
+    overflow-y: auto;
+  }
+}

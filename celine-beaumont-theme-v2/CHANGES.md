@@ -32,6 +32,18 @@ intact. Customer-facing copy is English. No arrival-date promises (shipping time
    (product-form.js) which adds to cart and re-renders the drawer in place — no page
    reload, no new library. Renders nothing if no suitable product exists or the top tier
    is already reached.
+5. **Compare-at ("was") price on cart line items**: when a variant has a compare-at price
+   higher than its selling price, the cart now shows the old price struck through next to
+   the current price (reusing Dawn's `cart-item__discounted-prices` / `cart-item__old-price`
+   classes), reminding the shopper the item is on sale. No effect on items without a
+   compare-at price or on items already showing a promo discount.
+
+### `assets/celine-cart-trust.css` (also updated)
+6. **Reachable bottom on shorter screens**: with the extra footer content the fixed
+   (non-scrolling) parts of the drawer could exceed a phone viewport and clip the bottom
+   (checkout button / payment logos). Dawn already flips the whole drawer to scroll at
+   `max-height: 650px`; the threshold is raised to `900px` so the bottom stays reachable
+   on typical phones. Taller screens keep the pinned-footer layout.
 
 ### `assets/celine-cart-trust.css` (new)
 Scoped styles for the three additions above, using existing `--celine-*` tokens and Dawn

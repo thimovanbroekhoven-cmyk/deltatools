@@ -333,6 +333,12 @@
                             -%}
                           </div>
 
+                          {%- liquid
+                            assign has_compare_at = false
+                            if item.variant.compare_at_price and item.variant.compare_at_price > item.variant.price
+                              assign has_compare_at = true
+                            endif
+                          -%}
                           {%- if item.original_price != item.final_price -%}
                             <div class="cart-item__discounted-prices">
                               <span class="visually-hidden">
@@ -340,6 +346,25 @@
                               </span>
                               <s class="cart-item__old-price product-option">
                                 {{- item.original_price | money -}}
+                              </s>
+                              <span class="visually-hidden">
+                                {{ 'products.product.price.sale_price' | t }}
+                              </span>
+                              <strong class="cart-item__final-price product-option">
+                                {{ item.final_price | money }}
+                              </strong>
+                            </div>
+                          {%- elsif has_compare_at -%}
+                            {%- comment -%}
+                              Celine Beaumont: show the product's compare-at ("was") price struck through
+                              beside the current price, so the shopper is reminded the item is now cheaper.
+                            {%- endcomment -%}
+                            <div class="cart-item__discounted-prices">
+                              <span class="visually-hidden">
+                                {{ 'products.product.price.regular_price' | t }}
+                              </span>
+                              <s class="cart-item__old-price product-option">
+                                {{- item.variant.compare_at_price | money -}}
                               </s>
                               <span class="visually-hidden">
                                 {{ 'products.product.price.sale_price' | t }}
