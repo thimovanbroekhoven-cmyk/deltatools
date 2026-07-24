@@ -9,6 +9,24 @@
    ========================================================================== */
 
 /* -----------------------------------------------------------------------
+   iOS viewport fix + pinned footer.
+   Dawn sizes the drawer with height:100%, which on iOS Safari resolves to the
+   LARGE viewport (the area behind the bottom toolbar), so the pinned checkout
+   footer ends up hidden behind Safari's toolbar and the drawer leaves a gap.
+   Sizing the flex column to 100dvh (the visible/dynamic viewport) makes the
+   drawer fill the screen and keeps the footer in view; min-height:0 lets the
+   item list shrink so it scrolls and the footer stays pinned. Falls back to
+   Dawn's height:100% where dvh is unsupported.
+   ----------------------------------------------------------------------- */
+cart-drawer .drawer__inner {
+  height: 100dvh;
+}
+
+cart-drawer cart-drawer-items {
+  min-height: 0;
+}
+
+/* -----------------------------------------------------------------------
    Trust reassurance rows — directly above the checkout button.
    Compact, one line each, icon left, no frames, no accent colour.
    ----------------------------------------------------------------------- */
