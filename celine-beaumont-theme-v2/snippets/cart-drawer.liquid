@@ -146,15 +146,6 @@
           </div>
         </div>
 
-        {%- comment -%}
-          Celine Beaumont: the brief ships free Canadian shipping on all orders, so this banner
-          has no threshold to gate on — it's shown whenever the cart has items. If a shipping
-          threshold is introduced later, wrap this in a cart.total_price check.
-        {%- endcomment -%}
-        <p class="cart-drawer__free-shipping">
-          <span class="svg-wrapper" aria-hidden="true">{{ 'icon-checkmark.svg' | inline_asset_content }}</span>
-          {{ 'celine.cart.free_shipping_unlocked' | t }}
-        </p>
       {%- endif -%}
 
       <cart-drawer-items
@@ -164,6 +155,16 @@
           class=" is-empty"
         {% endif %}
       >
+        {%- if cart != empty -%}
+          {%- comment -%}
+            Celine Beaumont: the brief ships free Canadian shipping on all orders, so this banner
+            has no threshold to gate on — it's shown whenever the cart has items.
+          {%- endcomment -%}
+          <p class="cart-drawer__free-shipping">
+            <span class="svg-wrapper" aria-hidden="true">{{ 'icon-checkmark.svg' | inline_asset_content }}</span>
+            {{ 'celine.cart.free_shipping_unlocked' | t }}
+          </p>
+        {%- endif -%}
         <form
           action="{{ routes.cart_url }}"
           id="CartDrawer-Form"
@@ -664,6 +665,7 @@
                           >
                         {%- endif -%}
                       </a>
+                      <div class="cart-drawer__upsell-info">
                       <a href="{{ candidate.url }}" class="cart-drawer__upsell-title">
                         {{- candidate.title | escape -}}
                       </a>
@@ -688,6 +690,7 @@
                           </button>
                         {%- endform -%}
                       </product-form>
+                      </div>
                     </div>
                     {%- assign upsell_shown = upsell_shown | plus: 1 -%}
                   {%- endif -%}
@@ -697,6 +700,7 @@
           </div>
         {%- endif -%}
       {%- endif -%}
+      </cart-drawer-items>
       <div class="drawer__footer">
         {%- if settings.show_cart_note -%}
           <details id="Details-CartDrawer">

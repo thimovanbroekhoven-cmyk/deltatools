@@ -69,9 +69,23 @@
 }
 
 /* -----------------------------------------------------------------------
-   "People also bought" — a horizontally scrollable row of up to 4 different
-   products from the same collection, shown between the cart items and the
-   footer. Cards are ~60% wide so the next one peeks, inviting the swipe.
+   Pinned checkout footer.
+   The carousel now lives inside <cart-drawer-items> (the scrolling middle),
+   so only the header stays fixed at the top and the footer — total, trust
+   rows, checkout button and payment logos — stays pinned at the bottom,
+   with the cart items + carousel scrolling between them (like the reference).
+   min-height:0 lets the scroll area shrink so the footer never gets clipped.
+   ----------------------------------------------------------------------- */
+.cart-drawer cart-drawer-items {
+  min-height: 0;
+}
+
+/* -----------------------------------------------------------------------
+   "People also bought" — a horizontally scrollable row of up to 4 products
+   from the same collection, inside the scrolling area, above the footer.
+   Horizontal card: fixed square image on the left (so every card is exactly
+   the same size), title + was/now price + Add button on the right. Cards are
+   ~85% wide so the next one peeks, inviting the swipe.
    ----------------------------------------------------------------------- */
 .cart-drawer__upsell {
   margin: 0 2rem;
@@ -89,7 +103,7 @@
 
 .cart-drawer__upsell-track {
   display: flex;
-  gap: 1.2rem;
+  gap: 1rem;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
@@ -99,29 +113,42 @@
 
 .cart-drawer__upsell-card {
   flex: 0 0 auto;
-  width: 60%;
-  max-width: 20rem;
+  width: 85%;
+  max-width: 30rem;
   scroll-snap-align: start;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1rem;
+  border: 1px solid var(--celine-hairline);
 }
 
 .cart-drawer__upsell-media {
+  flex: 0 0 auto;
+  width: 7.2rem;
+  height: 7.2rem;
   display: block;
-  line-height: 0;
-  margin-bottom: 0.8rem;
+  overflow: hidden;
   background: var(--celine-cream);
 }
 
 .cart-drawer__upsell-media img {
-  display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: cover;
+  display: block;
+}
+
+.cart-drawer__upsell-info {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .cart-drawer__upsell-title {
-  margin: 0 0 0.4rem;
+  margin: 0;
   font-size: 1.3rem;
   line-height: 1.3;
   color: rgb(var(--color-foreground));
@@ -137,7 +164,6 @@
   flex-wrap: wrap;
   align-items: baseline;
   gap: 0.6rem;
-  margin-bottom: 0.8rem;
 }
 
 .cart-drawer__upsell-was {
@@ -151,13 +177,13 @@
 }
 
 .cart-drawer__upsell-form {
-  margin-top: auto;
+  margin-top: 0.2rem;
 }
 
 .cart-drawer__upsell-add.button {
-  width: 100%;
-  min-height: 4rem;
-  padding: 0.9rem 1rem;
+  width: auto;
+  min-height: 3.6rem;
+  padding: 0.6rem 1.8rem;
 }
 
 .cart-drawer__upsell-track::-webkit-scrollbar {
@@ -167,23 +193,4 @@
 .cart-drawer__upsell-track::-webkit-scrollbar-thumb {
   background-color: rgba(var(--color-foreground), 0.4);
   border-radius: 100px;
-}
-
-/* -----------------------------------------------------------------------
-   Reachable bottom on shorter screens.
-   The default Dawn drawer pins the footer and only scrolls the item list,
-   inside a height:100% / overflow:hidden container. With the added trust
-   rows, payment logos and carousel the fixed content can exceed a phone
-   viewport, clipping the checkout button / payment logos at the bottom.
-   Dawn already switches the WHOLE drawer to scroll at max-height:650px; we
-   raise that threshold so the bottom stays reachable on typical phones.
-   ----------------------------------------------------------------------- */
-@media screen and (max-height: 900px) {
-  cart-drawer:not(.is-empty) cart-drawer-items {
-    overflow: visible;
-  }
-
-  cart-drawer:not(.is-empty) .drawer__inner {
-    overflow-y: auto;
-  }
 }
