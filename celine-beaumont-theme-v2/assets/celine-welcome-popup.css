@@ -1,0 +1,179 @@
+/* ==========================================================================
+   Celine Beaumont — welcome e-mail capture popup (product pages)
+   Loaded from sections/celine-welcome-popup.liquid. Uses existing brand
+   tokens (--celine-*) and Dawn's color-scheme variables — no new fonts,
+   colours or libraries. Fully reversible: remove the section + this file.
+   ========================================================================== */
+.celine-welcome-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.celine-welcome-popup.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.celine-welcome-popup[hidden] {
+  display: none;
+}
+
+.celine-welcome-popup__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.celine-welcome-popup__dialog {
+  position: relative;
+  width: 100%;
+  max-width: 42rem;
+  background: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  padding: 3.4rem 2.8rem 3rem;
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.28);
+  transform: translateY(1.2rem);
+  transition: transform 0.25s ease;
+  text-align: center;
+}
+
+.celine-welcome-popup.is-open .celine-welcome-popup__dialog {
+  transform: translateY(0);
+}
+
+.celine-welcome-popup__close {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  width: 4rem;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: rgb(var(--color-foreground));
+}
+
+.celine-welcome-popup__close .svg-wrapper,
+.celine-welcome-popup__close svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.celine-welcome-popup__eyebrow {
+  margin: 0 0 0.8rem;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--celine-muted, rgba(var(--color-foreground), 0.6));
+}
+
+.celine-welcome-popup__heading {
+  margin: 0 0 1.2rem;
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: var(--font-heading-weight);
+  font-size: 2.6rem;
+  line-height: 1.15;
+}
+
+.celine-welcome-popup__text {
+  margin: 0 0 2rem;
+  font-size: 1.4rem;
+  line-height: 1.5;
+  color: rgba(var(--color-foreground), 0.8);
+}
+
+.celine-welcome-popup__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 0;
+}
+
+.celine-welcome-popup__input {
+  width: 100%;
+  padding: 1.3rem 1.6rem;
+  font-size: 1.5rem;
+  color: rgb(var(--color-foreground));
+  background: rgb(var(--color-background));
+  border: 1px solid rgba(var(--color-foreground), 0.25);
+  border-radius: 0;
+}
+
+.celine-welcome-popup__input:focus {
+  outline: none;
+  border-color: rgb(var(--color-foreground));
+}
+
+.celine-welcome-popup__submit.button {
+  width: 100%;
+}
+
+.celine-welcome-popup__small {
+  margin: 0.4rem 0 0;
+  font-size: 1.1rem;
+  color: rgba(var(--color-foreground), 0.55);
+}
+
+.celine-welcome-popup__error {
+  margin: 0 0 1rem;
+  font-size: 1.3rem;
+  color: #b3261e;
+}
+
+.celine-welcome-popup__code {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  margin: 0 0 1.6rem;
+}
+
+.celine-welcome-popup__code span {
+  padding: 1.2rem 1.8rem;
+  border: 1px dashed rgba(var(--color-foreground), 0.4);
+  font-size: 1.8rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+}
+
+.celine-welcome-popup__copy {
+  padding: 0 1.6rem;
+  border: 1px solid rgb(var(--color-foreground));
+  border-left: 0;
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+  cursor: pointer;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.celine-welcome-popup__shop.button {
+  width: 100%;
+}
+
+body.celine-welcome-open {
+  overflow: hidden;
+}
+
+@media screen and (max-width: 480px) {
+  .celine-welcome-popup__dialog {
+    padding: 2.8rem 1.8rem 2.4rem;
+  }
+
+  .celine-welcome-popup__heading {
+    font-size: 2.2rem;
+  }
+}

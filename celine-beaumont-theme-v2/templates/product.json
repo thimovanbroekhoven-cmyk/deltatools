@@ -264,6 +264,10 @@
         "padding_top": 56,
         "padding_bottom": 64
       }
+    },
+    "welcome_popup": {
+      "type": "celine-welcome-popup",
+      "settings": {}
     }
   },
   "order": [
@@ -271,6 +275,7 @@
     "details-band",
     "reviews",
     "related-products",
-    "faq"
+    "faq",
+    "welcome_popup"
   ]
 }
