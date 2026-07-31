@@ -91,8 +91,31 @@ De kortingsstrategie is bewust **niet** eenzijdig gewijzigd op winkelniveau. Kie
 3. **Alles stapelbaar (tot 30%).** COMEBACK10 op combineerbaar zetten zodat code + staffel samen
    kunnen — hoogste korting, laagste marge.
 
-## 7. Optionele vervolg-verbeteringen (op akkoord)
+## 7. Launch-prep doorgevoerd (2026-07-31) — kortingen + Klaviyo
 
-- Subtiel, ingeklapt kortingscode-veld in de cart (voor e-mail/ad-codes, zonder coupon-jagen uit te lokken).
-- Verwijder-knopje naast een toegepaste korting.
-- Doortrekken van dezelfde verbeteringen naar de live theme zodra v2 wordt gepubliceerd.
+Besluit na onderzoek: **staffelladder = de motor** (optie 1). Reden: Shopify staat max. één
+order-korting per bestelling toe, dus een flat code kán niet stapelen met de staffel — hij
+vervangt 'm. Tiered verslaat flat op AOV (+15–25%, goal-gradient). Bronnen in §4.
+
+**Shopify — kortinghygiëne (live winkel, uitgevoerd):**
+- `COMEBACK10` → op **1× per klant** gezet (was: iedereen, ongelimiteerd, oneindig herbruikbaar = lek). Alleen verspreiden via win-back flow.
+- `BUNDLE2` en `BUNDLE3` → **gedeactiveerd** (dupliceerden de automatische staffel; konden een klant een slechtere deal geven). Omkeerbaar.
+- `WELCOME10` (10% eerste bestelling) → al correct op 1× per klant; is de first-order code voor de campagne.
+- Automatische staffel (10/15/20% bij 2/3/4) → ongewijzigd, blijft de enige publieke korting.
+
+**Klaviyo — audit:**
+- Flows live: **Abandoned Checkout**, **Welkomstserie e-mail met korting** (trigger: Added to List `Sx69Rb`), **Thank you email**. ✓
+- Kritiek gat: **0 signup-forms** → welkomstserie werd nauwelijks gevoed. Voor koude Meta-traffic mis je zo de e-mail-capture van niet-kopers.
+- **Opgelost:** welkomst-pop-up aangemaakt als **concept** (form ID `WTsqHV`), gekoppeld aan lijst `Sx69Rb`, met `WELCOME10` op het succes-scherm, 8s delay, merkkleur #C8A96E.
+
+## 8. Nog door de eigenaar te doen (kan/mag ik niet autonoom)
+
+- [ ] **Pop-up publiceren**: Klaviyo → Sign-up forms → "Welkomst-popup — 10% eerste bestelling (campagne)" → design checken → **Publish**. (Nu draft, vangt nog niemand.)
+- [ ] **Abandoned-checkout flow** controleren: staat COMEBACK10 erin, timing goed, aan?
+- [ ] **Volledige checkout testen op mobiel** (add-to-cart → cart → checkout → betaling).
+- [ ] Beslissen of v2 live gaat (nu is de oude Bram Konings-theme live).
+
+## 9. Optioneel later
+
+- Subtiel kortingscode-veld / verwijder-knopje in de cart.
+- Verbeteringen doortrekken naar live theme zodra v2 wordt gepubliceerd.
