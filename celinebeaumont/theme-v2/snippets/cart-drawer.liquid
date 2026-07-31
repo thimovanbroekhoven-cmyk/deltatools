@@ -815,23 +815,6 @@
             {{ 'sections.cart.checkout' | t }}
           </button>
 
-          {%- comment -%}
-            Celine Beaumont: accelerated / express checkout buttons (Shop Pay, PayPal, Google Pay, …).
-            One-tap checkout is the single biggest cart-conversion lever, so we surface it right under
-            the main checkout button. This is a SELF-CONTAINED {% form 'cart', cart %} — it submits the
-            whole cart straight to the accelerated wallet and never touches the AJAX CartDrawer-Form
-            above, so the drawer's add/remove/qty behaviour is unaffected. It renders nothing unless
-            the shop has accelerated checkouts enabled in Settings > Payments, and nothing on an
-            empty cart.
-          {%- endcomment -%}
-          {%- if additional_checkout_buttons and cart != empty -%}
-            <div class="cart-drawer__express" style="margin-top: 4px;">
-              {%- form 'cart', cart -%}
-                {{ content_for_additional_checkout_buttons }}
-              {%- endform -%}
-            </div>
-          {%- endif -%}
-
           <a href="{{ routes.all_products_collection_url }}" class="cart-drawer__continue-link link">
             {{ 'celine.cart.continue_shopping' | t }}
           </a>

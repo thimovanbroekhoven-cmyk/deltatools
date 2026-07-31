@@ -64,15 +64,19 @@ Bronnen:
 
 ## 5. Doorgevoerd in v2 (2026-07-31)
 
-**Express / accelerated checkout-knoppen** toegevoegd onder de checkout-knop in
-`snippets/cart-drawer.liquid` (Shop Pay / PayPal / Google Pay …).
+**Express / accelerated checkout-knoppen geprobeerd en weer teruggedraaid.**
 
-- Geïmplementeerd als een op zichzelf staand `{% form 'cart' %}` met
-  `{{ content_for_additional_checkout_buttons }}`, zodat het de bestaande AJAX-cart
-  (`CartDrawer-Form`) niet raakt.
-- Rendert alleen als de winkel accelerated checkouts aan heeft staan (Settings > Payments) en
-  niet bij een lege cart.
-- Push geverifieerd byte-exact (MD5 `1c9ed868566a9f6db1421d84989f4fb2`, 43825 bytes).
+- Eerst een op zichzelf staand `{% form 'cart', cart %}` met
+  `{{ content_for_additional_checkout_buttons }}` onder de checkout-knop toegevoegd
+  (Shop Pay / Apple Pay / PayPal / Google Pay).
+- Renderden correct, maar op mobiel gaven de vier volle gekleurde balken een rommelig,
+  overladen beeld. Op verzoek van de eigenaar weer verwijderd — alleen de enkele
+  **CHECK OUT**-knop + "Continue shopping"-link blijven over.
+- `snippets/cart-drawer.liquid` staat nu byte-identiek aan het origineel
+  (MD5 `a937d9b22564346ecfef7492472a66ee`, 42830 bytes). Geen Liquid-fouten.
+
+> Leerpunt: `{% form 'cart' %}` moet het cart-object meekrijgen (`{% form 'cart', cart %}`),
+> anders volgt "cart form must be given a cart".
 
 > Preview-theme, dus niet live — veilig te testen via de theme-preview.
 
