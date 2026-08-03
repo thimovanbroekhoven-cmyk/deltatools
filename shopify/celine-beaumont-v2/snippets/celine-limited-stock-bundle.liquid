@@ -146,13 +146,12 @@
             {{ picker_row }}
           </span>
         </span>
+        {%- comment -%} Urgency — docked to the 2-pack card but outside the collapsible panel, so it stays visible on both options {%- endcomment -%}
+        <span class="lsb-urgency">
+          <span data-lsb-timer-wrap>Offer ends in <b data-lsb-timer>00:00:00</b> · </span>Only <b>{{ stock_left }}</b> left in stock!
+        </span>
       </span>
     </label>
-  </div>
-
-  {%- comment -%} Offer urgency — always visible, not tied to an option {%- endcomment -%}
-  <div class="lsb-urgency">
-    <span data-lsb-timer-wrap>Offer ends in <b data-lsb-timer>00:00:00</b> · </span>Only <b>{{ stock_left }}</b> left in stock!
   </div>
 
   <button type="button" class="lsb-add" data-lsb-add>

@@ -171,8 +171,7 @@
 /* ---- Urgency ---- */
 .lsb-urgency {
   display: block;
-  margin-top: 1.1rem;
-  text-align: center;
+  margin-top: 1rem;
   background: var(--lsb-red-soft);
   color: var(--lsb-red);
   font-size: 1.25rem;
