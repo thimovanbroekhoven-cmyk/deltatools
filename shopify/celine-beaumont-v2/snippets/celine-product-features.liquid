@@ -1,0 +1,115 @@
+{%- comment -%}
+  ============================================================
+  Celine Beaumont — Product feature icons
+  ------------------------------------------------------------
+  Reads two sections out of the product description and turns
+  them into icon badges:
+    - the feature bullet list ("Why women love this set", or any
+      <h3> section whose body uses "•" bullets)  -> feature pills
+    - the "Care Instructions" section                 -> care icons
+
+  Icons are matched to the theme's own SVGs by keyword, so this
+  works on every product without extra setup. The matching text
+  is hidden from the description by celine-product-description.
+    {% render 'celine-product-features', product: product %}
+  ============================================================
+{%- endcomment -%}
+
+{%- liquid
+  assign parts = product.description | split: '<h3'
+  assign care_body = ''
+  assign feat_body = ''
+  for part in parts
+    unless forloop.first
+      assign heading = part | split: '</h3>' | first | strip_html | downcase
+      assign body = part | split: '</h3>' | last
+      if heading contains 'care'
+        assign care_body = body
+      endif
+      if heading contains 'love this set' or heading contains 'why women'
+        assign feat_body = body
+      elsif body contains '•'
+        assign feat_body = body
+      endif
+    endunless
+  endfor
+-%}
+
+{%- if feat_body != blank or care_body != blank -%}
+  <link rel="stylesheet" href="{{ 'celine-product-features.css' | asset_url }}" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="{{ 'celine-product-features.css' | asset_url }}"></noscript>
+
+  <div class="cf">
+    {%- if feat_body != blank -%}
+      {%- assign feat_arr = feat_body | replace: '<br>', '||' | replace: '<br/>', '||' | replace: '<br />', '||' | strip_html | split: '||' -%}
+      <div class="cf-pills">
+        {%- for raw in feat_arr -%}
+          {%- assign item = raw | replace: '•', '' | strip -%}
+          {%- if item == blank -%}{%- continue -%}{%- endif -%}
+          {%- assign label = item | split: '–' | first | split: ' - ' | first | split: ':' | first | strip | truncate: 34 -%}
+          {%- assign lc = item | downcase -%}
+          {%- liquid
+            if lc contains 'fit' or lc contains 'flatter' or lc contains 'shape' or lc contains 'silhou'
+              assign icon = 'icon-silhouette.svg'
+            elsif lc contains 'stretch'
+              assign icon = 'icon-lightning-bolt.svg'
+            elsif lc contains 'wrinkle' or lc contains 'crease' or lc contains 'kreuk'
+              assign icon = 'icon-shirt.svg'
+            elsif lc contains 'light' or lc contains 'breath' or lc contains 'fabric' or lc contains 'material' or lc contains 'soft' or lc contains 'cotton'
+              assign icon = 'icon-leaf.svg'
+            elsif lc contains 'comfort' or lc contains 'easy' or lc contains 'wear' or lc contains 'jogger' or lc contains 'relax'
+              assign icon = 'icon-pants.svg'
+            elsif lc contains 'elegant' or lc contains 'style' or lc contains 'look' or lc contains 'refined' or lc contains 'occasion' or lc contains 'gelegen' or lc contains 'chic'
+              assign icon = 'icon-star.svg'
+            elsif lc contains 'quality' or lc contains 'premium' or lc contains 'price' or lc contains 'value'
+              assign icon = 'icon-price-tag.svg'
+            elsif lc contains 'warm'
+              assign icon = 'icon-fire.svg'
+            elsif lc contains 'cool' or lc contains 'cold' or lc contains 'summer'
+              assign icon = 'icon-snowflake.svg'
+            else
+              assign icon = 'icon-heart.svg'
+            endif
+          -%}
+          <span class="cf-pill">
+            <span class="cf-pill__ic">{{ icon | inline_asset_content }}</span>
+            <span class="cf-pill__tx">{{ label }}</span>
+          </span>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if care_body != blank -%}
+      {%- assign care_arr = care_body | replace: '<br>', '||' | replace: '<br/>', '||' | replace: '<br />', '||' | strip_html | split: '||' -%}
+      <div class="cf-care">
+        <span class="cf-care__title">{{ 'Care instructions' }}</span>
+        <div class="cf-care__grid">
+          {%- for raw in care_arr -%}
+            {%- assign line = raw | strip -%}
+            {%- if line == blank -%}{%- continue -%}{%- endif -%}
+            {%- assign lc = line | downcase -%}
+            {%- liquid
+              if lc contains 'bleach'
+                assign icon = 'icon-unavailable.svg'
+              elsif lc contains 'iron'
+                assign icon = 'icon-iron.svg'
+              elsif lc contains 'tumble' or lc contains 'dry'
+                assign icon = 'icon-dryer.svg'
+              elsif lc contains 'wash'
+                assign icon = 'icon-washing.svg'
+              elsif lc contains 'cold' or lc contains 'cool'
+                assign icon = 'icon-snowflake.svg'
+              else
+                assign icon = 'icon-tick.svg'
+              endif
+            -%}
+            <span class="cf-care__item">
+              <span class="cf-care__ic">{{ icon | inline_asset_content }}</span>
+              <span class="cf-care__tx">{{ line }}</span>
+            </span>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+{%- endif -%}

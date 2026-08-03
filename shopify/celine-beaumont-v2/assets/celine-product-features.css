@@ -1,0 +1,73 @@
+/* ============================================================
+   Celine Beaumont — Product feature icons
+   ============================================================ */
+.cf {
+  --cf-ink: #1c1a17;
+  --cf-muted: #8b857c;
+  --cf-text: #57524b;
+  --cf-line: #e4ded4;
+  margin: 1.4rem 0;
+}
+
+/* ---- Feature pills ---- */
+.cf-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+.cf-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  border: 1.5px solid var(--cf-line);
+  border-radius: 10px;
+  padding: 0.7rem 1.1rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--cf-ink);
+  line-height: 1.2;
+}
+.cf-pill__ic {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+}
+.cf-pill__ic svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ---- Care instructions ---- */
+.cf-care { margin-top: 1.6rem; }
+.cf-care__title {
+  display: block;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--cf-muted);
+  margin-bottom: 0.8rem;
+}
+.cf-care__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.8rem 1.4rem;
+}
+.cf-care__item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.3rem;
+  color: var(--cf-text);
+}
+.cf-care__ic {
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+}
+.cf-care__ic svg { width: 22px; height: 22px; }
+
+@media (min-width: 750px) {
+  .cf-care__grid { grid-template-columns: repeat(4, 1fr); }
+}

@@ -29,9 +29,17 @@
           "type": "trust_strip",
           "settings": {}
         },
+        "feature_icons": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "{% render 'celine-product-features', product: product %}"
+          }
+        },
         "description": {
-          "type": "description",
-          "settings": {}
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "{% render 'celine-product-description', product: product %}"
+          }
         },
         "share": {
           "type": "share",
@@ -46,6 +54,7 @@
         "deal_bundle",
         "size_guide",
         "trust_strip",
+        "feature_icons",
         "description",
         "share"
       ],
