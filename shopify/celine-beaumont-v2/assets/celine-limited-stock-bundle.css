@@ -69,6 +69,8 @@
   border-color: var(--lsb-ink);
   box-shadow: 0 0 0 1px var(--lsb-ink);
 }
+/* Extra top room so the POPULAR ribbon never overlaps the title/price */
+.lsb-option--bundle { padding-top: 2.7rem; }
 .lsb-option__radio { position: absolute; opacity: 0; pointer-events: none; }
 .lsb-option__mark {
   flex: 0 0 auto;
@@ -169,12 +171,13 @@
 /* ---- Urgency ---- */
 .lsb-urgency {
   display: block;
-  margin-top: 0.4rem;
+  margin-top: 1.1rem;
+  text-align: center;
   background: var(--lsb-red-soft);
   color: var(--lsb-red);
   font-size: 1.25rem;
   font-weight: 500;
-  padding: 0.7rem 0.9rem;
+  padding: 0.8rem 0.9rem;
   border-radius: 8px;
 }
 .lsb-urgency b { font-weight: 700; }

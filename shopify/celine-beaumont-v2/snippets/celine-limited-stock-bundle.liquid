@@ -29,9 +29,9 @@
   assign add_text = 'Add to cart'
   assign secure_text = 'Secure checkout'
   assign choose_text = 'Choose colour & size'
-  # Bundle discount shown on the 2-pack (see note in chat — needs a matching
-  # Shopify automatic discount to be charged at checkout).
-  assign bundle_discount_percent = 20
+  # Bundle discount shown on the 2-pack. Matches the store's automatic
+  # discount "10% off when buying 2 products".
+  assign bundle_discount_percent = 10
   # Urgency
   assign stock_left = 7
   assign timer_minutes = 15
@@ -145,12 +145,14 @@
             <img class="lsb-row__img" data-lsb-thumb alt="" src="{{ product.featured_image | image_url: width: 120 }}" width="44" height="56" loading="lazy">
             {{ picker_row }}
           </span>
-          <span class="lsb-urgency">
-            <span data-lsb-timer-wrap>Offer ends in <b data-lsb-timer>00:00:00</b> · </span>Only <b>{{ stock_left }}</b> left in stock!
-          </span>
         </span>
       </span>
     </label>
+  </div>
+
+  {%- comment -%} Offer urgency — always visible, not tied to an option {%- endcomment -%}
+  <div class="lsb-urgency">
+    <span data-lsb-timer-wrap>Offer ends in <b data-lsb-timer>00:00:00</b> · </span>Only <b>{{ stock_left }}</b> left in stock!
   </div>
 
   <button type="button" class="lsb-add" data-lsb-add>
