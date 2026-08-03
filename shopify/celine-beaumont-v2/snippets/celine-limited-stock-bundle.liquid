@@ -257,20 +257,26 @@
       if (unitCompare) { sc.textContent = money(unitCompare, currency, lang); sc.style.display = ''; }
       else { sc.style.display = 'none'; }
 
-      // Bundle card — based on the two currently selected variants
+      // Bundle card — based on the two currently selected variants.
+      // sum        = selling prices (basis for the discounted bundle price)
+      // sumCompare = original prices (compare-at, else selling) → strikethrough
       var bundleRows = root.querySelector('[data-lsb-option="bundle"]').querySelectorAll('.lsb-row');
       var sum = 0;
+      var sumCompare = 0;
       Array.prototype.forEach.call(bundleRows, function (row) {
         var v = rowVariant(row);
-        sum += v ? v.price : unit;
+        var price = v ? v.price : unit;
+        var comp = (v && v.compare_at > v.price) ? v.compare_at : price;
+        sum += price;
+        sumCompare += comp;
       });
       var bundlePrice = Math.round(sum * (1 - discount));
       root.querySelector('[data-lsb-bundle-price]').textContent = money(bundlePrice, currency, lang);
       var bc = root.querySelector('[data-lsb-bundle-compare]');
       var saveEl = root.querySelector('[data-lsb-save]');
-      if (discount > 0 && sum > bundlePrice) {
-        bc.textContent = money(sum, currency, lang); bc.style.display = '';
-        saveEl.textContent = 'Save ' + money(sum - bundlePrice, currency, lang);
+      if (sumCompare > bundlePrice) {
+        bc.textContent = money(sumCompare, currency, lang); bc.style.display = '';
+        saveEl.textContent = 'Save ' + money(sumCompare - bundlePrice, currency, lang);
         saveEl.style.display = '';
       } else {
         bc.style.display = 'none';
