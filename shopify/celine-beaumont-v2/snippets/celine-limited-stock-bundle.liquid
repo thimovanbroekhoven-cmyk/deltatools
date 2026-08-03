@@ -34,7 +34,8 @@
   assign bundle_discount_percent = 10
   # Urgency
   assign stock_left = 7
-  assign timer_minutes = 15
+  # Countdown start (minutes). 720 = 12h, shown as HH:MM:SS and counting down.
+  assign timer_minutes = 720
   assign uid = 'lsb-' | append: product.id
 -%}
 
