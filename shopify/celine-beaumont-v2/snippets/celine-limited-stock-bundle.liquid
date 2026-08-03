@@ -1,0 +1,403 @@
+{%- comment -%}
+  ============================================================
+  Celine Beaumont — Limited stock indicator + 2-pack bundle
+  ------------------------------------------------------------
+  Self-contained purchase module for the product page.
+  - "Limited stock. Be quick!" alert with an animated red ping
+  - Single vs. 2-pack options, with the 2-pack pre-selected
+  - Per-option dropdowns (single = 1 row, bundle = 2 rows)
+  - Adds both selected variants to the cart (AJAX) and opens
+    the cart drawer
+  - Evergreen countdown + "Only X left!" urgency line
+  - Secure-checkout trust strip
+
+  Rendered via a custom_liquid block:
+      {% render 'celine-limited-stock-bundle', product: product %}
+
+  Tweak the settings just below to change copy, discount % and
+  urgency numbers.
+  ============================================================
+{%- endcomment -%}
+
+{%- liquid
+  assign alert_text = 'Limited stock. Be quick!'
+  assign single_label = 'Single item'
+  assign single_sub = 'Standard price'
+  assign bundle_label = '2-Pack'
+  assign bundle_sub = 'Limited deal'
+  assign popular_text = 'POPULAR'
+  assign add_text = 'Add to cart'
+  assign secure_text = 'Secure checkout'
+  assign choose_text = 'Choose colour & size'
+  # Bundle discount shown on the 2-pack (see note in chat — needs a matching
+  # Shopify automatic discount to be charged at checkout).
+  assign bundle_discount_percent = 20
+  # Urgency
+  assign stock_left = 7
+  assign timer_minutes = 15
+  assign uid = 'lsb-' | append: product.id
+-%}
+
+<link rel="stylesheet" href="{{ 'celine-limited-stock-bundle.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ 'celine-limited-stock-bundle.css' | asset_url }}"></noscript>
+
+{%- capture picker_row -%}
+  {%- unless product.has_only_default_variant -%}
+    <div class="lsb-picker">
+      {%- for opt in product.options_with_values -%}
+        <select class="lsb-select" data-opt-position="{{ opt.position }}" aria-label="{{ opt.name | escape }}">
+          {%- for val in opt.values -%}
+            <option value="{{ val | escape }}">{{ val }}</option>
+          {%- endfor -%}
+        </select>
+      {%- endfor -%}
+    </div>
+  {%- endunless -%}
+{%- endcapture -%}
+
+<limited-stock-bundle
+  class="lsb"
+  id="{{ uid }}"
+  data-lsb-root
+  data-discount="{{ bundle_discount_percent }}"
+  data-stock="{{ stock_left }}"
+  data-timer="{{ timer_minutes }}"
+  data-product-id="{{ product.id }}"
+  data-currency="{{ cart.currency.iso_code | default: shop.currency }}"
+  data-fallback-img="{{ product.featured_image | image_url: width: 120 }}"
+>
+  {%- comment -%} Variant data for the client {%- endcomment -%}
+  <script type="application/json" data-lsb-variants>
+    [
+      {%- for v in product.variants -%}
+        {
+          "id": {{ v.id }},
+          "available": {{ v.available }},
+          "price": {{ v.price }},
+          "compare_at": {{ v.compare_at_price | default: 0 }},
+          "options": {{ v.options | json }},
+          "title": {{ v.title | json }},
+          "image": {% if v.featured_image %}{{ v.featured_image | image_url: width: 120 | json }}{% else %}null{% endif %}
+        }{%- unless forloop.last -%},{%- endunless -%}
+      {%- endfor -%}
+    ]
+  </script>
+
+  {%- comment -%} Limited stock alert with red ping {%- endcomment -%}
+  <div class="lsb-alert" role="status">
+    <span class="lsb-ping" aria-hidden="true">
+      <span class="lsb-ping__wave"></span>
+      <span class="lsb-ping__dot"></span>
+    </span>
+    <span class="lsb-alert__text">{{ alert_text }}</span>
+  </div>
+
+  {%- comment -%} Purchase options {%- endcomment -%}
+  <div class="lsb-options" role="radiogroup" aria-label="Purchase options">
+
+    {%- comment -%} Single {%- endcomment -%}
+    <label class="lsb-option" data-lsb-option="single">
+      <input class="lsb-option__radio" type="radio" name="lsb-choice-{{ product.id }}" value="single">
+      <span class="lsb-option__mark" aria-hidden="true"></span>
+      <span class="lsb-option__body">
+        <span class="lsb-option__head">
+          <span class="lsb-option__title">{{ single_label }}</span>
+          <span class="lsb-option__price">
+            <span class="lsb-price" data-lsb-single-price></span>
+            <s class="lsb-price-was" data-lsb-single-compare></s>
+          </span>
+        </span>
+        <span class="lsb-option__sub">{{ single_sub }}</span>
+        <span class="lsb-option__panel">
+          <span class="lsb-choose">{{ choose_text }}</span>
+          <span class="lsb-row">
+            <img class="lsb-row__img" data-lsb-thumb alt="" src="{{ product.featured_image | image_url: width: 120 }}" width="44" height="56" loading="lazy">
+            {{ picker_row }}
+          </span>
+        </span>
+      </span>
+    </label>
+
+    {%- comment -%} 2-pack bundle (pre-selected) {%- endcomment -%}
+    <label class="lsb-option lsb-option--bundle" data-lsb-option="bundle">
+      <span class="lsb-tag">{{ popular_text }}</span>
+      <input class="lsb-option__radio" type="radio" name="lsb-choice-{{ product.id }}" value="bundle" checked>
+      <span class="lsb-option__mark" aria-hidden="true"></span>
+      <span class="lsb-option__body">
+        <span class="lsb-option__head">
+          <span class="lsb-option__title">
+            {{ bundle_label }}
+            <span class="lsb-save" data-lsb-save></span>
+          </span>
+          <span class="lsb-option__price">
+            <span class="lsb-price" data-lsb-bundle-price></span>
+            <s class="lsb-price-was" data-lsb-bundle-compare></s>
+          </span>
+        </span>
+        <span class="lsb-option__sub">{{ bundle_sub }}</span>
+        <span class="lsb-option__panel">
+          <span class="lsb-choose">{{ choose_text }}</span>
+          <span class="lsb-row">
+            <img class="lsb-row__img" data-lsb-thumb alt="" src="{{ product.featured_image | image_url: width: 120 }}" width="44" height="56" loading="lazy">
+            {{ picker_row }}
+          </span>
+          <span class="lsb-row">
+            <img class="lsb-row__img" data-lsb-thumb alt="" src="{{ product.featured_image | image_url: width: 120 }}" width="44" height="56" loading="lazy">
+            {{ picker_row }}
+          </span>
+          <span class="lsb-urgency">
+            <span data-lsb-timer-wrap>Offer ends in <b data-lsb-timer>00:00:00</b> · </span>Only <b>{{ stock_left }}</b> left in stock!
+          </span>
+        </span>
+      </span>
+    </label>
+  </div>
+
+  <button type="button" class="lsb-add" data-lsb-add>
+    <span data-lsb-add-label>{{ add_text }}</span>
+  </button>
+  <div class="lsb-error" data-lsb-error hidden></div>
+
+  {%- comment -%} Trust strip {%- endcomment -%}
+  <div class="lsb-trust">
+    <span class="lsb-trust__secure">
+      {{- 'icon-padlock.svg' | inline_asset_content -}}
+      {{ secure_text }}
+    </span>
+    <span class="lsb-trust__icons">
+      {%- for type in shop.enabled_payment_types limit: 6 -%}
+        {{ type | payment_type_svg_tag: class: 'lsb-pay' }}
+      {%- endfor -%}
+    </span>
+  </div>
+</limited-stock-bundle>
+
+<script>
+(function () {
+  if (window.__lsbInit) return;
+  window.__lsbInit = true;
+
+  function money(cents, currency, lang) {
+    try {
+      return new Intl.NumberFormat(lang || 'en', { style: 'currency', currency: currency }).format(cents / 100);
+    } catch (e) {
+      return (cents / 100).toFixed(2);
+    }
+  }
+
+  function initRoot(root) {
+    var currency = root.dataset.currency || 'USD';
+    var lang = document.documentElement.lang || 'en';
+    var discount = parseFloat(root.dataset.discount || '0') / 100;
+    var timerMinutes = parseInt(root.dataset.timer || '0', 10);
+    var productId = root.dataset.productId;
+    var fallbackImg = root.dataset.fallbackImg || '';
+
+    var variants = [];
+    try { variants = JSON.parse(root.querySelector('[data-lsb-variants]').textContent); } catch (e) {}
+
+    function findVariant(values) {
+      return variants.find(function (v) {
+        return v.options.length === values.length && v.options.every(function (o, i) { return o === values[i]; });
+      });
+    }
+    function firstAvailable() { return variants.find(function (v) { return v.available; }) || variants[0]; }
+
+    // Read the selected variant for a given .lsb-row (thumbnail + selects)
+    function rowVariant(row) {
+      var selects = row.querySelectorAll('.lsb-select');
+      if (!selects.length) return variants[0]; // default-variant product
+      var values = Array.prototype.map.call(selects, function (s) { return s.value; });
+      return findVariant(values);
+    }
+
+    function updateRowThumb(row) {
+      var v = rowVariant(row);
+      var img = row.querySelector('[data-lsb-thumb]');
+      if (img) img.src = (v && v.image) ? v.image : fallbackImg;
+    }
+
+    // Seed every row to the first available variant so 2 pieces are pre-selected
+    (function seed() {
+      var fa = firstAvailable();
+      if (!fa) return;
+      root.querySelectorAll('.lsb-row').forEach(function (row) {
+        row.querySelectorAll('.lsb-select').forEach(function (s) {
+          var pos = parseInt(s.dataset.optPosition, 10);
+          if (fa.options[pos - 1] != null) s.value = fa.options[pos - 1];
+        });
+        updateRowThumb(row);
+      });
+    })();
+
+    function activeOption() {
+      var checked = root.querySelector('.lsb-option__radio:checked');
+      return checked ? checked.value : 'bundle';
+    }
+
+    function activeRows() {
+      var opt = root.querySelector('[data-lsb-option="' + activeOption() + '"]');
+      return Array.prototype.slice.call(opt.querySelectorAll('.lsb-row'));
+    }
+
+    function selectedVariants() {
+      return activeRows().map(rowVariant);
+    }
+
+    function refreshPrices() {
+      var fa = firstAvailable();
+      var unit = fa ? fa.price : 0;
+      var unitCompare = (fa && fa.compare_at > fa.price) ? fa.compare_at : 0;
+
+      // Single card
+      root.querySelector('[data-lsb-single-price]').textContent = money(unit, currency, lang);
+      var sc = root.querySelector('[data-lsb-single-compare]');
+      if (unitCompare) { sc.textContent = money(unitCompare, currency, lang); sc.style.display = ''; }
+      else { sc.style.display = 'none'; }
+
+      // Bundle card — based on the two currently selected variants
+      var bundleRows = root.querySelector('[data-lsb-option="bundle"]').querySelectorAll('.lsb-row');
+      var sum = 0;
+      Array.prototype.forEach.call(bundleRows, function (row) {
+        var v = rowVariant(row);
+        sum += v ? v.price : unit;
+      });
+      var bundlePrice = Math.round(sum * (1 - discount));
+      root.querySelector('[data-lsb-bundle-price]').textContent = money(bundlePrice, currency, lang);
+      var bc = root.querySelector('[data-lsb-bundle-compare]');
+      var saveEl = root.querySelector('[data-lsb-save]');
+      if (discount > 0 && sum > bundlePrice) {
+        bc.textContent = money(sum, currency, lang); bc.style.display = '';
+        saveEl.textContent = 'Save ' + money(sum - bundlePrice, currency, lang);
+        saveEl.style.display = '';
+      } else {
+        bc.style.display = 'none';
+        saveEl.style.display = 'none';
+      }
+    }
+
+    function setActive() {
+      root.querySelectorAll('.lsb-option').forEach(function (o) {
+        var on = o.dataset.lsbOption === activeOption();
+        o.classList.toggle('is-selected', on);
+      });
+      refreshPrices();
+    }
+
+    // Events
+    root.querySelectorAll('.lsb-option__radio').forEach(function (r) {
+      r.addEventListener('change', setActive);
+    });
+    root.querySelectorAll('.lsb-select').forEach(function (s) {
+      s.addEventListener('change', function () {
+        updateRowThumb(s.closest('.lsb-row'));
+        refreshPrices();
+      });
+    });
+
+    // Countdown (evergreen, persisted per product)
+    if (timerMinutes > 0) {
+      var timerEl = root.querySelector('[data-lsb-timer]');
+      var key = 'lsb-deadline-' + productId;
+      var now = Date.now();
+      var deadline = parseInt(localStorage.getItem(key) || '0', 10);
+      if (!deadline || deadline < now) {
+        deadline = now + timerMinutes * 60 * 1000;
+        localStorage.setItem(key, String(deadline));
+      }
+      function tick() {
+        var left = Math.max(0, deadline - Date.now());
+        if (left <= 0) {
+          deadline = Date.now() + timerMinutes * 60 * 1000;
+          localStorage.setItem(key, String(deadline));
+          left = deadline - Date.now();
+        }
+        var s = Math.floor(left / 1000);
+        var h = String(Math.floor(s / 3600)).padStart(2, '0');
+        var m = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+        var sec = String(s % 60).padStart(2, '0');
+        if (timerEl) timerEl.textContent = h + ':' + m + ':' + sec;
+      }
+      tick();
+      setInterval(tick, 1000);
+    }
+
+    // Add to cart
+    var addBtn = root.querySelector('[data-lsb-add]');
+    var addLabel = root.querySelector('[data-lsb-add-label]');
+    var errEl = root.querySelector('[data-lsb-error]');
+
+    addBtn.addEventListener('click', function () {
+      errEl.hidden = true;
+      var vs = selectedVariants();
+      if (vs.some(function (v) { return !v; })) {
+        errEl.textContent = 'This combination is unavailable — please pick another option.';
+        errEl.hidden = false;
+        return;
+      }
+      if (vs.some(function (v) { return !v.available; })) {
+        errEl.textContent = 'One of the selected variants is sold out.';
+        errEl.hidden = false;
+        return;
+      }
+
+      // Merge identical variants into a single line with quantity
+      var counts = {};
+      vs.forEach(function (v) { counts[v.id] = (counts[v.id] || 0) + 1; });
+      var items = Object.keys(counts).map(function (id) {
+        return { id: parseInt(id, 10), quantity: counts[id] };
+      });
+
+      var original = addLabel.textContent;
+      addBtn.disabled = true;
+      addLabel.textContent = 'Adding…';
+
+      var root_url = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
+      var drawer = document.querySelector('cart-drawer');
+      var body = { items: items };
+      if (drawer) {
+        body.sections = ['cart-drawer', 'cart-icon-bubble'];
+        body.sections_url = window.location.pathname;
+      }
+
+      fetch(root_url + 'cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/javascript' },
+        body: JSON.stringify(body)
+      })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+        .then(function (res) {
+          if (!res.ok) {
+            errEl.textContent = res.data.description || res.data.message || 'Could not add to cart.';
+            errEl.hidden = false;
+            return;
+          }
+          if (drawer && res.data.sections) {
+            drawer.renderContents(res.data);
+          } else {
+            window.location = root_url + 'cart';
+          }
+        })
+        .catch(function () {
+          errEl.textContent = 'Something went wrong. Please try again.';
+          errEl.hidden = false;
+        })
+        .finally(function () {
+          addBtn.disabled = false;
+          addLabel.textContent = original;
+        });
+    });
+
+    setActive();
+  }
+
+  function boot() {
+    document.querySelectorAll('[data-lsb-root]').forEach(initRoot);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
+</script>

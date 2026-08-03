@@ -1,0 +1,223 @@
+/* ============================================================
+   Celine Beaumont — Limited stock indicator + 2-pack bundle
+   ============================================================ */
+.lsb {
+  --lsb-red: #e0533d;
+  --lsb-red-soft: #fcece8;
+  --lsb-ink: #1c1a17;
+  --lsb-muted: #8b857c;
+  --lsb-line: #e4ded4;
+  --lsb-card: #ffffff;
+  display: block;
+  margin: 1.4rem 0 0.8rem;
+  color: var(--lsb-ink);
+  font-size: 1.4rem;
+  line-height: 1.4;
+}
+
+/* ---- Limited stock alert ---- */
+.lsb-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  margin-bottom: 1.1rem;
+}
+.lsb-ping {
+  position: relative;
+  display: inline-flex;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+}
+.lsb-ping__dot {
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--lsb-red);
+}
+.lsb-ping__wave {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--lsb-red);
+  opacity: 0.75;
+  animation: lsb-ping 1.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+@keyframes lsb-ping {
+  75%, 100% { transform: scale(2.1); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lsb-ping__wave { animation: none; opacity: 0.35; }
+}
+
+/* ---- Options ---- */
+.lsb-options { display: flex; flex-direction: column; gap: 0.9rem; }
+.lsb-option {
+  position: relative;
+  display: flex;
+  gap: 1rem;
+  padding: 1.3rem 1.4rem;
+  border: 1.5px solid var(--lsb-line);
+  border-radius: 10px;
+  background: var(--lsb-card);
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.lsb-option.is-selected {
+  border-color: var(--lsb-ink);
+  box-shadow: 0 0 0 1px var(--lsb-ink);
+}
+.lsb-option__radio { position: absolute; opacity: 0; pointer-events: none; }
+.lsb-option__mark {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  border: 2px solid var(--lsb-muted);
+  border-radius: 50%;
+  transition: border-color 0.15s ease;
+}
+.lsb-option.is-selected .lsb-option__mark {
+  border-color: var(--lsb-ink);
+  background:
+    radial-gradient(circle, var(--lsb-ink) 0 5px, transparent 6px);
+}
+.lsb-option__body { flex: 1 1 auto; min-width: 0; }
+.lsb-option__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.lsb-option__title {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.lsb-option__sub { color: var(--lsb-muted); font-size: 1.3rem; }
+.lsb-option__price { text-align: right; white-space: nowrap; }
+.lsb-price { font-weight: 700; }
+.lsb-price-was { color: var(--lsb-muted); margin-left: 0.5rem; font-weight: 400; }
+
+.lsb-tag {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  background: var(--lsb-ink);
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 0.35rem 0.8rem;
+  border-radius: 0 9px 0 9px;
+}
+.lsb-save {
+  background: var(--lsb-red);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  text-transform: none;
+}
+
+/* ---- Variant picker panel (only shown for the selected option) ---- */
+.lsb-option__panel { display: none; margin-top: 1.1rem; }
+.lsb-option.is-selected .lsb-option__panel { display: block; }
+.lsb-choose {
+  display: block;
+  font-size: 1.2rem;
+  color: var(--lsb-muted);
+  margin-bottom: 0.6rem;
+}
+.lsb-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.7rem;
+}
+.lsb-row__img {
+  width: 44px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: var(--lsb-red-soft);
+  flex: 0 0 auto;
+}
+.lsb-picker { display: flex; gap: 0.7rem; flex: 1 1 auto; flex-wrap: wrap; }
+.lsb-select {
+  flex: 1 1 0;
+  min-width: 110px;
+  padding: 0.7rem 2rem 0.7rem 0.9rem;
+  border: 1.5px solid var(--lsb-line);
+  border-radius: 8px;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%231c1a17' d='M6 8 0 2l1.4-1.4L6 5.2 10.6.6 12 2z'/%3E%3C/svg%3E") no-repeat right 0.9rem center;
+  font-size: 1.35rem;
+  color: var(--lsb-ink);
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+/* ---- Urgency ---- */
+.lsb-urgency {
+  display: block;
+  margin-top: 0.4rem;
+  background: var(--lsb-red-soft);
+  color: var(--lsb-red);
+  font-size: 1.25rem;
+  font-weight: 500;
+  padding: 0.7rem 0.9rem;
+  border-radius: 8px;
+}
+.lsb-urgency b { font-weight: 700; }
+
+/* ---- Add to cart ---- */
+.lsb-add {
+  width: 100%;
+  margin-top: 1.2rem;
+  padding: 1.35rem 1rem;
+  background: var(--lsb-ink);
+  color: #fff;
+  border: 0;
+  border-radius: 8px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.05s ease;
+}
+.lsb-add:hover { opacity: 0.9; }
+.lsb-add:active { transform: translateY(1px); }
+.lsb-add:disabled { opacity: 0.6; cursor: default; }
+.lsb-error {
+  margin-top: 0.7rem;
+  color: var(--lsb-red);
+  font-size: 1.25rem;
+}
+
+/* ---- Trust strip ---- */
+.lsb-trust {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--lsb-line);
+  color: var(--lsb-muted);
+  font-size: 1.2rem;
+}
+.lsb-trust__secure { display: inline-flex; align-items: center; gap: 0.5rem; }
+.lsb-trust__secure svg { width: 15px; height: 15px; }
+.lsb-trust__icons { display: inline-flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+.lsb-trust__icons .lsb-pay { height: 24px; width: auto; border-radius: 3px; }
