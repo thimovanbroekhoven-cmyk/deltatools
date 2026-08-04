@@ -51,8 +51,8 @@
       "block_order": [
         "title",
         "rating",
-        "deal_bundle",
         "size_guide",
+        "deal_bundle",
         "trust_strip",
         "feature_icons",
         "description",
