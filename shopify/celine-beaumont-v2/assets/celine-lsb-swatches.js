@@ -61,12 +61,7 @@
       }
     }
 
-    // Swap the main product photo to a variant's featured media. Prefer the
-    // theme's native <media-gallery> API (Dawn's setActiveMedia): it correctly
-    // drives the MOBILE slider — prepend + slider.resetPages() + scroll — which
-    // a plain is-active/prepend does not, so the hero image really changes on a
-    // phone. Only fall back to manual activation if the element hasn't upgraded.
-    // Bump a Shopify CDN image URL to a hero-sized width.
+    // Swap the main product photo to a variant's photo. width bumper + hero getter.
     function bigImg(url) {
       if (!url) return url;
       if (/([?&])width=\d+/.test(url)) return url.replace(/([?&])width=\d+/, '$1width=1200');
@@ -83,22 +78,16 @@
     }
     function showInGallery(v) {
       if (!v) return;
-      var id = (prefix && v.media_id) ? prefix + '-' + v.media_id : null;
-      // If this colour's photo IS a slide in the gallery, use Dawn's native
-      // API (keeps the mobile slider + thumbnails in sync).
-      if (id && gallery) {
-        var viewer = gallery.querySelector('[id^="GalleryViewer"]');
-        if (viewer && viewer.querySelector('[data-media-id="' + id + '"]') && typeof gallery.setActiveMedia === 'function') {
-          try { gallery.setActiveMedia(id, true); return; } catch (e) {}
-        }
-      }
-      // Otherwise the theme hides variant photos from the gallery
-      // (hide_variants), so there is no slide to switch to — swap the visible
-      // hero image straight to this colour's photo instead.
+      // hide_variants strips the other colours' photos out of the gallery, so
+      // there is no reliable slide to switch to (and switching back to the
+      // featured colour would not restore an <img> we overwrote). So for EVERY
+      // colour — including the original/featured one — just swap the visible
+      // hero <img> straight to that colour's photo. Fully reversible.
       var img = heroImg();
-      if (img && v.image) {
+      var url = v.image || fallbackImg;
+      if (img && url) {
         img.removeAttribute('srcset');
-        img.src = bigImg(v.image);
+        img.src = bigImg(url);
       }
     }
 
