@@ -281,32 +281,51 @@ cart-drawer .cart__ctas > * + * {
    right-side panel — a full-width cart on a wide monitor stretches badly.
    ----------------------------------------------------------------------- */
 @media screen and (max-width: 749px) {
-  /* The overlay behind the panel fills the WHOLE screen (100vh = large
-     viewport, i.e. behind the top URL bar and bottom Safari toolbar too) and
-     is painted with the cart's own background colour instead of Dawn's dark
-     translucent scrim. That removes the grey strips at the top and bottom —
-     the cream now runs edge to edge, like icon-amsterdam. The panel is pinned
-     to the top (align-items:flex-start). */
+  /* Every layer of the drawer is the SAME height (100dvh = the visible area
+     between the browser bars, set by the global rule near the top of this
+     file) and painted cream, so the cart covers the whole visible viewport
+     with no gap. An earlier attempt sized the outer layers to 100vh while the
+     panel stayed 100dvh; that mismatch left a transparent strip at the bottom
+     where the page behind (product recommendations) peeked through. Keeping
+     one height everywhere removes that. The bottom Safari toolbar sits in the
+     area below 100dvh and is drawn by the browser itself. */
   cart-drawer.drawer,
   cart-drawer .cart-drawer {
-    height: 100vh;
     background: rgb(var(--color-background));
   }
-  cart-drawer.drawer {
-    align-items: flex-start;
-  }
 
-  /* The panel itself stays at 100dvh (the visible area between the browser
-     bars) so the pinned checkout footer never hides behind the bottom
-     toolbar. Below it, the cream from the fixed #CartDrawer layer (100vh, so
-     it paints behind the bottom Safari toolbar too) shows through — that is
-     what tints the toolbar light instead of grey. */
   cart-drawer .drawer__inner {
     width: 100vw;
     max-width: 100vw;
-    height: 100dvh;
     border-left: 0;
   }
+}
+
+/* -----------------------------------------------------------------------
+   Compact the tiered-discount progress bar (10% / 15% / 20%). It sat tall at
+   the top of the cart and pushed the products down; tighten its spacing and
+   type so it reads as a slim status strip.
+   ----------------------------------------------------------------------- */
+.cart-drawer .cart-drawer__progress {
+  margin-top: 0.4rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+}
+
+.cart-drawer .cart-drawer__progress-message {
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.cart-drawer .cart-drawer__progress-labels {
+  margin-top: 0.7rem;
+  font-size: 1.15rem;
+}
+
+.cart-drawer .cart-drawer__free-shipping {
+  margin-top: 0.6rem;
+  margin-bottom: 0;
+  font-size: 1.3rem;
 }
 
 /* -----------------------------------------------------------------------
