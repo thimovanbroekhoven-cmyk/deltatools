@@ -154,23 +154,32 @@
     // strip, so we relocate its DOM node to sit immediately after the swatches.
     // The app injects asynchronously, so we retry via a MutationObserver until
     // it appears, then stop. Moving the node keeps the app's own click handler.
+    var infoCol = root.closest('.product__info-container, .product__info-wrapper, [id^="ProductInfo"]') || document;
     function findSizeChart() {
+      // The size chart is the product column's only Shopify APP block, which
+      // Shopify wraps in .shopify-block / [id^="shopify-block-"]. That wrapper
+      // is the most reliable handle (the app's inner class names can change).
+      var blocks = infoCol.querySelectorAll('.shopify-block, [id^="shopify-block-"]');
+      for (var i = 0; i < blocks.length; i++) {
+        if (!blocks[i].contains(root) && !root.contains(blocks[i])) return blocks[i];
+      }
+      // Fallbacks: a Kiwi-flavoured element, or anything reading "size chart".
       var el = document.querySelector(
         '[class*="kiwi" i],[id*="kiwi" i],[class*="size-chart" i],[class*="sizechart" i],[class*="size_chart" i]'
       );
-      if (el) return el.closest('.shopify-block') || el.closest('[id^="shopify-block"]') || el;
-      var nodes = document.querySelectorAll('a, button, summary');
-      for (var i = 0; i < nodes.length; i++) {
-        var t = (nodes[i].textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
+      if (el) return el.closest('.shopify-block, [id^="shopify-block-"]') || el;
+      var nodes = infoCol.querySelectorAll('a, button, summary, span, div');
+      for (var j = 0; j < nodes.length; j++) {
+        var t = (nodes[j].textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
         if (t === 'size chart' || t === 'size guide' || t === 'maattabel') {
-          return nodes[i].closest('.shopify-block') || nodes[i].closest('[id^="shopify-block"]') || nodes[i];
+          return nodes[j].closest('.shopify-block, [id^="shopify-block-"]') || nodes[j];
         }
       }
       return null;
     }
     function placeSizeChart() {
       var node = findSizeChart();
-      if (!node || node === container || container.contains(node)) return !!node;
+      if (!node || node === container || container.contains(node) || node.contains(container)) return !!node;
       if (container.nextElementSibling === node) return true;
       container.insertAdjacentElement('afterend', node);
       return true;
@@ -178,11 +187,14 @@
     if (!placeSizeChart()) {
       var tries = 0;
       var mo = new MutationObserver(function () {
-        if (placeSizeChart() || ++tries > 40) mo.disconnect();
+        if (placeSizeChart() || ++tries > 60) mo.disconnect();
       });
       mo.observe(document.body, { childList: true, subtree: true });
-      window.setTimeout(function () { mo.disconnect(); }, 12000);
+      window.setTimeout(function () { mo.disconnect(); }, 15000);
     }
+    // Belt-and-braces: the app may inject after our observer window; retry on a
+    // few timers too. placeSizeChart is idempotent, so extra calls are cheap.
+    [400, 1200, 3000].forEach(function (ms) { window.setTimeout(placeSizeChart, ms); });
 
     // Keep the swatch highlight + main photo in sync when the dropdowns or the
     // single/2-pack option change (whether by the shopper or by a swatch click).
