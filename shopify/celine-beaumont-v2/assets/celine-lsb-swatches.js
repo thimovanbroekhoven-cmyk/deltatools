@@ -66,33 +66,40 @@
     // drives the MOBILE slider — prepend + slider.resetPages() + scroll — which
     // a plain is-active/prepend does not, so the hero image really changes on a
     // phone. Only fall back to manual activation if the element hasn't upgraded.
+    // Bump a Shopify CDN image URL to a hero-sized width.
+    function bigImg(url) {
+      if (!url) return url;
+      if (/([?&])width=\d+/.test(url)) return url.replace(/([?&])width=\d+/, '$1width=1200');
+      return url + (url.indexOf('?') >= 0 ? '&' : '?') + 'width=1200';
+    }
+    // The currently visible hero <img> in the gallery viewer.
+    function heroImg() {
+      if (!gallery) return null;
+      var viewer = gallery.querySelector('[id^="GalleryViewer"]') || gallery;
+      var slide = viewer.querySelector('.product__media-item.is-active')
+               || viewer.querySelector('.product__media-item')
+               || viewer.querySelector('li');
+      return slide ? slide.querySelector('img') : null;
+    }
     function showInGallery(v) {
-      if (!gallery || !prefix || !v || !v.media_id) return;
-      var id = prefix + '-' + v.media_id;
-      if (typeof gallery.setActiveMedia === 'function') {
-        try { gallery.setActiveMedia(id, true); return; } catch (e) {}
-      }
-      var viewer = gallery.querySelector('[id^="GalleryViewer"]');
-      if (!viewer) return;
-      var media = viewer.querySelector('[data-media-id="' + id + '"]');
-      if (!media) return;
-      viewer.querySelectorAll('[data-media-id]').forEach(function (el) { el.classList.remove('is-active'); });
-      media.classList.add('is-active');
-      if (media.parentElement.firstChild !== media) media.parentElement.prepend(media);
-      if (viewer.slider && typeof viewer.resetPages === 'function') {
-        try { viewer.resetPages(); } catch (e) {}
-      }
-      var thumbs = gallery.querySelector('[id^="GalleryThumbnails"]');
-      if (thumbs) {
-        var t = thumbs.querySelector('[data-target="' + id + '"]');
-        if (t) {
-          if (t.parentElement.firstChild !== t) t.parentElement.prepend(t);
-          thumbs.querySelectorAll('button').forEach(function (b) { b.removeAttribute('aria-current'); });
-          var tb = t.querySelector('button');
-          if (tb) tb.setAttribute('aria-current', 'true');
+      if (!v) return;
+      var id = (prefix && v.media_id) ? prefix + '-' + v.media_id : null;
+      // If this colour's photo IS a slide in the gallery, use Dawn's native
+      // API (keeps the mobile slider + thumbnails in sync).
+      if (id && gallery) {
+        var viewer = gallery.querySelector('[id^="GalleryViewer"]');
+        if (viewer && viewer.querySelector('[data-media-id="' + id + '"]') && typeof gallery.setActiveMedia === 'function') {
+          try { gallery.setActiveMedia(id, true); return; } catch (e) {}
         }
       }
-      try { media.parentElement.scrollTo({ left: media.offsetLeft }); } catch (e) {}
+      // Otherwise the theme hides variant photos from the gallery
+      // (hide_variants), so there is no slide to switch to — swap the visible
+      // hero image straight to this colour's photo instead.
+      var img = heroImg();
+      if (img && v.image) {
+        img.removeAttribute('srcset');
+        img.src = bigImg(v.image);
+      }
     }
 
     function currentColor() {
