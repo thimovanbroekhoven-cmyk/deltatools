@@ -61,11 +61,17 @@
       }
     }
 
-    // Swap the main image to a variant's featured media, in place — updates
-    // the active slide + thumbnail without yanking the page up to it.
+    // Swap the main product photo to a variant's featured media. Prefer the
+    // theme's native <media-gallery> API (Dawn's setActiveMedia): it correctly
+    // drives the MOBILE slider — prepend + slider.resetPages() + scroll — which
+    // a plain is-active/prepend does not, so the hero image really changes on a
+    // phone. Only fall back to manual activation if the element hasn't upgraded.
     function showInGallery(v) {
       if (!gallery || !prefix || !v || !v.media_id) return;
       var id = prefix + '-' + v.media_id;
+      if (typeof gallery.setActiveMedia === 'function') {
+        try { gallery.setActiveMedia(id, true); return; } catch (e) {}
+      }
       var viewer = gallery.querySelector('[id^="GalleryViewer"]');
       if (!viewer) return;
       var media = viewer.querySelector('[data-media-id="' + id + '"]');
@@ -73,6 +79,9 @@
       viewer.querySelectorAll('[data-media-id]').forEach(function (el) { el.classList.remove('is-active'); });
       media.classList.add('is-active');
       if (media.parentElement.firstChild !== media) media.parentElement.prepend(media);
+      if (viewer.slider && typeof viewer.resetPages === 'function') {
+        try { viewer.resetPages(); } catch (e) {}
+      }
       var thumbs = gallery.querySelector('[id^="GalleryThumbnails"]');
       if (thumbs) {
         var t = thumbs.querySelector('[data-target="' + id + '"]');
