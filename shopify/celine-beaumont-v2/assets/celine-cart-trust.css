@@ -424,3 +424,60 @@ cart-drawer .cart__ctas > * + * {
   text-align: center;
   font-size: 1.35rem;
 }
+
+/* -----------------------------------------------------------------------
+   Tighten the vertical whitespace throughout the drawer. Dawn's default
+   spacing left big empty gaps (header → progress, progress → column headers,
+   column headers → first product, and a large gap under the quantity), which
+   pushed "People also bought" below the fold so it never showed. Pull every
+   block closer together so the whole cart — including the upsell row — fits
+   without so much scrolling.
+   ----------------------------------------------------------------------- */
+.cart-drawer .drawer__header {
+  padding-top: 0.8rem;
+  padding-bottom: 0.2rem;
+}
+
+.cart-drawer .drawer__heading {
+  margin-bottom: 0;
+}
+
+/* Header → progress: kill the big gap above the tier bar */
+.cart-drawer .cart-drawer__progress {
+  margin-top: 0;
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.8rem;
+}
+
+/* Column headers (PRODUCT / TOTAL) — slim, tight to the first product */
+.cart-drawer .cart-items thead th {
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+}
+
+.cart-drawer .cart-items thead {
+  margin-bottom: 0;
+}
+
+/* Product rows — less top padding, tighter internal gaps */
+.cart-drawer .cart-items td {
+  padding-top: 1rem;
+}
+
+.cart-drawer .cart-item {
+  gap: 0.6rem;
+}
+
+.cart-drawer .cart-items .cart-item__quantity {
+  padding-top: 0.2rem;
+}
+
+.cart-drawer .cart-item:last-child {
+  margin-bottom: 0.6rem;
+}
+
+/* People also bought — pull it up under the products */
+.cart-drawer .cart-drawer__upsell {
+  margin-top: 0.4rem;
+  padding-top: 1rem;
+}
