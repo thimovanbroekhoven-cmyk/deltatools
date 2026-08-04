@@ -271,3 +271,19 @@ cart-drawer .cart__ctas > * + * {
   font-weight: 600;
   color: #1a8a4a;
 }
+
+/* -----------------------------------------------------------------------
+   Full-page cart on mobile (like icon-amsterdam). Dawn right-aligns the
+   drawer (.drawer { justify-content: flex-end }) and caps the inner at
+   40rem / calc(100vw - 3rem), which leaves a grey strip of the page showing
+   on the left. On phones we let the panel fill the whole viewport, flush to
+   both edges, and drop the left hairline border. Desktop keeps the roomy
+   right-side panel — a full-width cart on a wide monitor stretches badly.
+   ----------------------------------------------------------------------- */
+@media screen and (max-width: 749px) {
+  cart-drawer .drawer__inner {
+    width: 100vw;
+    max-width: 100vw;
+    border-left: 0;
+  }
+}
