@@ -148,6 +148,42 @@
     container.hidden = false;
     syncActive();
 
+    // --- move the size chart directly under the colour swatches ----------
+    // The size chart is a Shopify app block (Kiwi) that renders elsewhere in
+    // the product column. The shopper asked for it right under the colour
+    // strip, so we relocate its DOM node to sit immediately after the swatches.
+    // The app injects asynchronously, so we retry via a MutationObserver until
+    // it appears, then stop. Moving the node keeps the app's own click handler.
+    function findSizeChart() {
+      var el = document.querySelector(
+        '[class*="kiwi" i],[id*="kiwi" i],[class*="size-chart" i],[class*="sizechart" i],[class*="size_chart" i]'
+      );
+      if (el) return el.closest('.shopify-block') || el.closest('[id^="shopify-block"]') || el;
+      var nodes = document.querySelectorAll('a, button, summary');
+      for (var i = 0; i < nodes.length; i++) {
+        var t = (nodes[i].textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
+        if (t === 'size chart' || t === 'size guide' || t === 'maattabel') {
+          return nodes[i].closest('.shopify-block') || nodes[i].closest('[id^="shopify-block"]') || nodes[i];
+        }
+      }
+      return null;
+    }
+    function placeSizeChart() {
+      var node = findSizeChart();
+      if (!node || node === container || container.contains(node)) return !!node;
+      if (container.nextElementSibling === node) return true;
+      container.insertAdjacentElement('afterend', node);
+      return true;
+    }
+    if (!placeSizeChart()) {
+      var tries = 0;
+      var mo = new MutationObserver(function () {
+        if (placeSizeChart() || ++tries > 40) mo.disconnect();
+      });
+      mo.observe(document.body, { childList: true, subtree: true });
+      window.setTimeout(function () { mo.disconnect(); }, 12000);
+    }
+
     // Keep the swatch highlight + main photo in sync when the dropdowns or the
     // single/2-pack option change (whether by the shopper or by a swatch click).
     root.querySelectorAll('.lsb-select').forEach(function (s) {
