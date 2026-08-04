@@ -281,9 +281,25 @@ cart-drawer .cart__ctas > * + * {
    right-side panel — a full-width cart on a wide monitor stretches badly.
    ----------------------------------------------------------------------- */
 @media screen and (max-width: 749px) {
+  /* The overlay behind the panel fills the WHOLE screen (100vh = large
+     viewport, i.e. behind the top URL bar and bottom Safari toolbar too) and
+     is painted with the cart's own background colour instead of Dawn's dark
+     translucent scrim. That removes the grey strips at the top and bottom —
+     the cream now runs edge to edge, like icon-amsterdam. The panel is pinned
+     to the top (align-items:flex-start). */
+  cart-drawer.drawer {
+    height: 100vh;
+    background: rgb(var(--color-background));
+    align-items: flex-start;
+  }
+
+  /* The panel itself stays at 100dvh (the visible area between the browser
+     bars) so the pinned checkout footer never hides behind the bottom
+     toolbar. Below it, the cream overlay shows through. */
   cart-drawer .drawer__inner {
     width: 100vw;
     max-width: 100vw;
+    height: 100dvh;
     border-left: 0;
   }
 }
