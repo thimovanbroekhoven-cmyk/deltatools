@@ -481,3 +481,111 @@ cart-drawer .cart__ctas > * + * {
   margin-top: 0.4rem;
   padding-top: 1rem;
 }
+
+/* -----------------------------------------------------------------------
+   Quick-add mini-popup for "People also bought" (like icon-amsterdam).
+   A shared dialog appended to <body>; shopper picks colour (image swatches)
+   + size, then adds the chosen variant. Styles are global once this file is
+   loaded, so they reach the popup even though it sits outside the drawer.
+   ----------------------------------------------------------------------- */
+.lsb-qa-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+}
+.lsb-qa-overlay.is-open { display: flex; }
+
+.lsb-qa {
+  width: 100%;
+  max-width: 48rem;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 2rem;
+  position: relative;
+  background: rgb(var(--color-background));
+  border-radius: 1.2rem 1.2rem 0 0;
+}
+
+@media screen and (min-width: 750px) {
+  .lsb-qa-overlay { align-items: center; }
+  .lsb-qa { border-radius: 1rem; }
+}
+
+.lsb-qa__close {
+  position: absolute;
+  top: 0.8rem;
+  right: 1rem;
+  padding: 0.4rem;
+  background: none;
+  border: none;
+  font-size: 2.6rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--celine-ink);
+}
+
+.lsb-qa__head {
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+  margin-bottom: 1.6rem;
+  padding-right: 3rem;
+}
+.lsb-qa__img {
+  flex: 0 0 auto;
+  width: 6rem;
+  height: 7.5rem;
+  object-fit: cover;
+  background: var(--celine-cream);
+}
+.lsb-qa__title { margin: 0 0 0.4rem; font-size: 1.6rem; line-height: 1.3; }
+.lsb-qa__price { margin: 0; font-size: 1.5rem; }
+.lsb-qa__price s { color: var(--celine-muted-text); margin-right: 0.6rem; }
+
+.lsb-qa__optgroup { margin-bottom: 1.4rem; }
+.lsb-qa__optlabel {
+  display: block;
+  margin-bottom: 0.6rem;
+  font-size: 1.3rem;
+  color: var(--celine-body);
+}
+
+.lsb-qa__swatches,
+.lsb-qa__sizes { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+
+.lsb-qa__swatch {
+  width: 4.4rem;
+  height: 5.4rem;
+  padding: 0;
+  border: 1px solid var(--celine-hairline);
+  border-radius: 0.4rem;
+  background: #fff;
+  overflow: hidden;
+  line-height: 0;
+  cursor: pointer;
+}
+.lsb-qa__swatch img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.lsb-qa__swatch.is-active {
+  border-color: var(--celine-ink);
+  box-shadow: inset 0 0 0 1px var(--celine-ink);
+}
+
+.lsb-qa__size {
+  min-width: 4.4rem;
+  min-height: 4.4rem;
+  padding: 0 1.2rem;
+  border: 1px solid var(--celine-hairline);
+  background: #fff;
+  color: var(--celine-ink);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+.lsb-qa__size.is-active { border-color: var(--celine-ink); background: var(--celine-ink); color: #fff; }
+.lsb-qa__size:disabled { opacity: 0.4; cursor: not-allowed; text-decoration: line-through; }
+
+.lsb-qa__error { margin-bottom: 1rem; font-size: 1.3rem; color: #c0392b; }
+.lsb-qa__add { width: 100%; margin-top: 0.6rem; }
