@@ -1,0 +1,591 @@
+/* ==========================================================================
+   Celine Beaumont — cart drawer trust signals
+   Additive styles for the reassurance block, payment logos and the
+   "People also bought" carousel added to snippets/cart-drawer.liquid.
+   Loaded from that snippet. Uses existing brand tokens from celine-theme.css
+   (--celine-*) and Dawn's color-scheme variables — no new fonts, colours or
+   libraries. Fully reversible: delete this file + its stylesheet_tag and the
+   drawer markup.
+   ========================================================================== */
+
+/* -----------------------------------------------------------------------
+   Layout — pinned checkout footer, one scroll region (like icon-amsterdam).
+   Dawn already makes .drawer__inner a flex column with the footer pinned at
+   the bottom; we keep that and only fix two things:
+
+   1. iOS viewport. Dawn sizes the drawer with height:100%, which on iOS Safari
+      resolves to the LARGE viewport (behind the bottom toolbar), hiding the
+      checkout footer. 100dvh sizes it to the visible viewport instead.
+
+   2. One real scroll region. All the content between the header and the footer
+      is wrapped in .cart-drawer__scroll (a plain <div>), which is the single
+      scrolling element — header pinned on top, checkout footer pinned at the
+      bottom, everything else (cart items + People-also-bought) scrolls between
+      them. Using a normal div rather than the cart-drawer-items custom element
+      as the scroller avoids the iOS bug where a squeezed custom element stops
+      clipping and paints over the next block. Dawn's max-height:650px rule
+      would otherwise switch the whole inner to overflow:scroll and unpin the
+      footer, so we hold it to overflow:hidden.
+   ----------------------------------------------------------------------- */
+cart-drawer.drawer,
+cart-drawer .drawer__inner {
+  height: 100dvh;
+}
+
+.cart-drawer__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+cart-drawer cart-drawer-items {
+  display: block;
+  overflow: visible;
+}
+
+cart-drawer.is-empty .drawer__footer {
+  display: none;
+}
+
+@media screen and (max-height: 650px) {
+  cart-drawer .drawer__inner {
+    overflow: hidden;
+  }
+}
+
+/* -----------------------------------------------------------------------
+   Compact the pinned footer. Everything below the scroll region is fixed,
+   so keep it tight: less padding around the block, smaller gaps between the
+   total / trust rows / button / payment / continue link, so the checkout
+   button sits higher and the scrolling item list gets more room.
+   ----------------------------------------------------------------------- */
+cart-drawer .drawer__footer {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+cart-drawer .cart-drawer__footer > * + * {
+  margin-top: 0.4rem;
+}
+
+cart-drawer .cart__ctas {
+  margin-top: 1.6rem;
+}
+
+cart-drawer .cart__ctas > * + * {
+  margin-top: 0.8rem;
+}
+
+/* -----------------------------------------------------------------------
+   Trust reassurance rows — now at the bottom of the scroll area.
+   Compact, one line each, icon left, a hairline above to separate.
+   ----------------------------------------------------------------------- */
+.cart-drawer__trust {
+  margin: 0 2rem;
+  padding: 1.4rem 0 0;
+  border-top: 1px solid var(--celine-hairline);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  list-style: none;
+}
+
+.cart-drawer__trust-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.25;
+  color: var(--celine-body);
+}
+
+.cart-drawer__trust-icon {
+  flex: 0 0 auto;
+  width: 1.6rem;
+  height: 1.6rem;
+  color: var(--celine-muted);
+}
+
+.cart-drawer__trust-icon svg {
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+/* -----------------------------------------------------------------------
+   Payment methods — below the trust rows in the scroll area. Centred, small,
+   greyed (Shopify's own colour SVGs desaturated) so they reassure without
+   competing with the CTA.
+   ----------------------------------------------------------------------- */
+.cart-drawer__payment {
+  /* Now sits in the pinned CTAs, under the checkout button; .cart__ctas spaces it. */
+  margin: 0;
+}
+
+.cart-drawer__payment-list.list-payment {
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+.cart-drawer__payment-list .list-payment__item {
+  padding: 0.2rem;
+}
+
+.cart-drawer__payment-list .icon {
+  width: 2.8rem;
+  height: auto;
+  filter: grayscale(1);
+  opacity: 0.55;
+}
+
+/* ----------------------------------------------------------------------
+   "People also bought" — a horizontally scrollable row of up to 4 products
+   from the same collection, shown as a compact band at the bottom of the
+   scroll area. Horizontal card: fixed square image on the left (so every
+   card is exactly the same size), title + was/now price + Add button on the
+   right. Cards are ~85% wide so the next one peeks, inviting the swipe.
+   ---------------------------------------------------------------------- */
+.cart-drawer__upsell {
+  margin: 0 2rem;
+  padding: 1.4rem 0 0.2rem;
+  border-top: 1px solid var(--celine-hairline);
+}
+
+.cart-drawer__upsell-heading {
+  margin: 0 0 1rem;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--celine-ink);
+}
+
+.cart-drawer__upsell-track {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -2rem;
+  padding: 0 2rem 0.8rem;
+}
+
+.cart-drawer__upsell-card {
+  flex: 0 0 auto;
+  width: 85%;
+  max-width: 30rem;
+  scroll-snap-align: start;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1rem;
+  border: 1px solid var(--celine-hairline);
+}
+
+.cart-drawer__upsell-media {
+  flex: 0 0 auto;
+  width: 6rem;
+  height: 6rem;
+  display: block;
+  overflow: hidden;
+  background: var(--celine-cream);
+}
+
+.cart-drawer__upsell-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.cart-drawer__upsell-info {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cart-drawer__upsell-title {
+  margin: 0;
+  font-size: 1.3rem;
+  line-height: 1.3;
+  color: rgb(var(--color-foreground));
+  text-decoration: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cart-drawer__upsell-prices {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.cart-drawer__upsell-was {
+  font-size: 1.2rem;
+  color: var(--celine-muted-text);
+}
+
+.cart-drawer__upsell-price {
+  font-size: 1.3rem;
+  color: rgb(var(--color-foreground));
+}
+
+.cart-drawer__upsell-form {
+  margin-top: 0.2rem;
+}
+
+.cart-drawer__upsell-add.button {
+  width: auto;
+  min-height: 3.6rem;
+  padding: 0.6rem 1.8rem;
+}
+
+.cart-drawer__upsell-track::-webkit-scrollbar {
+  height: 3px;
+}
+
+.cart-drawer__upsell-track::-webkit-scrollbar-thumb {
+  background-color: rgba(var(--color-foreground), 0.4);
+  border-radius: 100px;
+}
+
+/* -----------------------------------------------------------------------
+   Shipping row above the Total — label left, "Free" in green, aligned like
+   the Total row (space-between).
+   ----------------------------------------------------------------------- */
+.cart-drawer__shipping {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.4rem;
+  color: var(--celine-body);
+}
+
+.cart-drawer__shipping-value {
+  font-weight: 600;
+  color: #1a8a4a;
+}
+
+/* -----------------------------------------------------------------------
+   Full-page cart on mobile (like icon-amsterdam). Dawn right-aligns the
+   drawer (.drawer { justify-content: flex-end }) and caps the inner at
+   40rem / calc(100vw - 3rem), which leaves a grey strip of the page showing
+   on the left. On phones we let the panel fill the whole viewport, flush to
+   both edges, and drop the left hairline border. Desktop keeps the roomy
+   right-side panel — a full-width cart on a wide monitor stretches badly.
+   ----------------------------------------------------------------------- */
+@media screen and (max-width: 749px) {
+  /* Every layer of the drawer is the SAME height (100dvh = the visible area
+     between the browser bars, set by the global rule near the top of this
+     file) and painted cream, so the cart covers the whole visible viewport
+     with no gap. An earlier attempt sized the outer layers to 100vh while the
+     panel stayed 100dvh; that mismatch left a transparent strip at the bottom
+     where the page behind (product recommendations) peeked through. Keeping
+     one height everywhere removes that. The bottom Safari toolbar sits in the
+     area below 100dvh and is drawn by the browser itself. */
+  cart-drawer.drawer,
+  cart-drawer .cart-drawer {
+    background: rgb(var(--color-background));
+  }
+
+  cart-drawer .drawer__inner {
+    width: 100vw;
+    max-width: 100vw;
+    border-left: 0;
+  }
+}
+
+/* -----------------------------------------------------------------------
+   Compact the tiered-discount progress bar (10% / 15% / 20%). It sat tall at
+   the top of the cart and pushed the products down; tighten its spacing and
+   type so it reads as a slim status strip.
+   ----------------------------------------------------------------------- */
+.cart-drawer .cart-drawer__progress {
+  margin-top: 0.4rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+}
+
+.cart-drawer .cart-drawer__progress-message {
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.cart-drawer .cart-drawer__progress-labels {
+  margin-top: 0.7rem;
+  font-size: 1.15rem;
+}
+
+.cart-drawer .cart-drawer__free-shipping {
+  margin-top: 0.6rem;
+  margin-bottom: 0;
+  font-size: 1.3rem;
+}
+
+/* -----------------------------------------------------------------------
+   ICON-style polish for the controls. Keeps the Celine serif identity but
+   tidies the interactive bits so they read as clean and deliberate:
+   - the quantity stepper becomes a compact rounded pill (not a wide box)
+   - the remove (bin) button sits neatly beside it
+   - the cart-level discount becomes a bordered tag
+   - the checkout button gets consistent uppercase tracking
+   All additive and scoped to the cart drawer.
+   ----------------------------------------------------------------------- */
+
+/* Quantity stepper → compact rounded pill */
+.cart-drawer .cart-item__quantity-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.cart-drawer .quantity.cart-quantity {
+  width: auto;
+  min-width: 0;
+  height: 3.8rem;
+  border: 1px solid var(--celine-hairline);
+  border-radius: 100px;
+  background: transparent;
+  overflow: hidden;
+}
+
+.cart-drawer .quantity.cart-quantity::after {
+  display: none;
+}
+
+.cart-drawer .quantity__button {
+  width: 3.6rem;
+  min-width: 3.6rem;
+  color: var(--celine-ink);
+}
+
+.cart-drawer .quantity__button:hover {
+  color: var(--celine-body);
+}
+
+.cart-drawer .quantity__input {
+  width: 3rem;
+  min-width: 3rem;
+  padding: 0;
+  font-size: 1.4rem;
+  color: var(--celine-ink);
+}
+
+/* Remove button — quiet, aligned with the pill */
+.cart-drawer .cart-remove-button {
+  margin-left: 0;
+}
+
+.cart-drawer .cart-remove-button .button {
+  min-height: 3.8rem;
+  min-width: 3.8rem;
+  color: var(--celine-muted);
+}
+
+.cart-drawer .cart-remove-button .button:hover {
+  color: var(--celine-ink);
+}
+
+/* Cart-level discount → tidy bordered tag */
+.cart-drawer .discounts__discount--end {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 1rem;
+  border: 1px solid var(--celine-hairline);
+  border-radius: 100px;
+  font-size: 1.2rem;
+  color: var(--celine-body);
+}
+
+.cart-drawer .discounts__discount--end svg,
+.cart-drawer .discounts__discount--end .icon {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+/* Checkout button — clean uppercase, consistent height & tracking */
+.cart-drawer .cart__checkout-button {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 1.35rem;
+  min-height: 5.2rem;
+}
+
+/* Continue-shopping link — centred, understated */
+.cart-drawer .cart-drawer__continue-link {
+  display: block;
+  text-align: center;
+  font-size: 1.35rem;
+}
+
+/* -----------------------------------------------------------------------
+   Tighten the vertical whitespace throughout the drawer. Dawn's default
+   spacing left big empty gaps (header → progress, progress → column headers,
+   column headers → first product, and a large gap under the quantity), which
+   pushed "People also bought" below the fold so it never showed. Pull every
+   block closer together so the whole cart — including the upsell row — fits
+   without so much scrolling.
+   ----------------------------------------------------------------------- */
+.cart-drawer .drawer__header {
+  padding-top: 0.8rem;
+  padding-bottom: 0.2rem;
+}
+
+.cart-drawer .drawer__heading {
+  margin-bottom: 0;
+}
+
+/* Header → progress: kill the big gap above the tier bar */
+.cart-drawer .cart-drawer__progress {
+  margin-top: 0;
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.8rem;
+}
+
+/* Column headers (PRODUCT / TOTAL) — slim, tight to the first product */
+.cart-drawer .cart-items thead th {
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+}
+
+.cart-drawer .cart-items thead {
+  margin-bottom: 0;
+}
+
+/* Product rows — less top padding, tighter internal gaps */
+.cart-drawer .cart-items td {
+  padding-top: 1rem;
+}
+
+.cart-drawer .cart-item {
+  gap: 0.6rem;
+}
+
+.cart-drawer .cart-items .cart-item__quantity {
+  padding-top: 0.2rem;
+}
+
+.cart-drawer .cart-item:last-child {
+  margin-bottom: 0.6rem;
+}
+
+/* People also bought — pull it up under the products */
+.cart-drawer .cart-drawer__upsell {
+  margin-top: 0.4rem;
+  padding-top: 1rem;
+}
+
+/* -----------------------------------------------------------------------
+   Quick-add mini-popup for "People also bought" (like icon-amsterdam).
+   A shared dialog appended to <body>; shopper picks colour (image swatches)
+   + size, then adds the chosen variant. Styles are global once this file is
+   loaded, so they reach the popup even though it sits outside the drawer.
+   ----------------------------------------------------------------------- */
+.lsb-qa-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+}
+.lsb-qa-overlay.is-open { display: flex; }
+
+.lsb-qa {
+  width: 100%;
+  max-width: 48rem;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 2rem;
+  position: relative;
+  background: rgb(var(--color-background));
+  border-radius: 1.2rem 1.2rem 0 0;
+}
+
+@media screen and (min-width: 750px) {
+  .lsb-qa-overlay { align-items: center; }
+  .lsb-qa { border-radius: 1rem; }
+}
+
+.lsb-qa__close {
+  position: absolute;
+  top: 0.8rem;
+  right: 1rem;
+  padding: 0.4rem;
+  background: none;
+  border: none;
+  font-size: 2.6rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--celine-ink);
+}
+
+.lsb-qa__head {
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+  margin-bottom: 1.6rem;
+  padding-right: 3rem;
+}
+.lsb-qa__img {
+  flex: 0 0 auto;
+  width: 6rem;
+  height: 7.5rem;
+  object-fit: cover;
+  background: var(--celine-cream);
+}
+.lsb-qa__title { margin: 0 0 0.4rem; font-size: 1.6rem; line-height: 1.3; }
+.lsb-qa__price { margin: 0; font-size: 1.5rem; }
+.lsb-qa__price s { color: var(--celine-muted-text); margin-right: 0.6rem; }
+
+.lsb-qa__optgroup { margin-bottom: 1.4rem; }
+.lsb-qa__optlabel {
+  display: block;
+  margin-bottom: 0.6rem;
+  font-size: 1.3rem;
+  color: var(--celine-body);
+}
+
+.lsb-qa__swatches,
+.lsb-qa__sizes { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+
+.lsb-qa__swatch {
+  width: 4.4rem;
+  height: 5.4rem;
+  padding: 0;
+  border: 1px solid var(--celine-hairline);
+  border-radius: 0.4rem;
+  background: #fff;
+  overflow: hidden;
+  line-height: 0;
+  cursor: pointer;
+}
+.lsb-qa__swatch img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.lsb-qa__swatch.is-active {
+  border-color: var(--celine-ink);
+  box-shadow: inset 0 0 0 1px var(--celine-ink);
+}
+
+.lsb-qa__size {
+  min-width: 4.4rem;
+  min-height: 4.4rem;
+  padding: 0 1.2rem;
+  border: 1px solid var(--celine-hairline);
+  background: #fff;
+  color: var(--celine-ink);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+.lsb-qa__size.is-active { border-color: var(--celine-ink); background: var(--celine-ink); color: #fff; }
+.lsb-qa__size:disabled { opacity: 0.4; cursor: not-allowed; text-decoration: line-through; }
+
+.lsb-qa__error { margin-bottom: 1rem; font-size: 1.3rem; color: #c0392b; }
+.lsb-qa__add { width: 100%; margin-top: 0.6rem; }

@@ -1,0 +1,40 @@
+{%- comment -%}
+  ============================================================
+  Celine Beaumont — Cleaned product description
+  ------------------------------------------------------------
+  Renders product.description with the feature bullet list and
+  the "Care Instructions" section removed (those are shown as
+  icons by celine-product-features instead, so no duplicate
+  text).
+    {% render 'celine-product-description', product: product %}
+  ============================================================
+{%- endcomment -%}
+
+{%- liquid
+  assign parts = product.description | split: '<h3'
+  assign out = ''
+  for part in parts
+    if forloop.first
+      assign out = part
+    else
+      assign heading = part | split: '</h3>' | first | strip_html | downcase
+      assign body = part | split: '</h3>' | last
+      assign drop = false
+      if heading contains 'care'
+        assign drop = true
+      endif
+      if heading contains 'love this set' or heading contains 'why women'
+        assign drop = true
+      elsif body contains '•'
+        assign drop = true
+      endif
+      unless drop
+        assign out = out | append: '<h3' | append: part
+      endunless
+    endif
+  endfor
+-%}
+
+{%- if out != blank -%}
+  <div class="product__description rte quick-add-hidden">{{ out }}</div>
+{%- endif -%}

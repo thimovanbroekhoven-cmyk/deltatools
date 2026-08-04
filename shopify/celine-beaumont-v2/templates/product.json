@@ -1,0 +1,262 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "rating": {
+          "type": "rating",
+          "settings": {}
+        },
+        "deal_bundle": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "{% render 'celine-limited-stock-bundle', product: product %}"
+          }
+        },
+        "size_guide": {
+          "type": "shopify://apps/kiwi-size-chart-recommender/blocks/kiwiSizing/b7369922-bf15-44ce-a121-a22a8fcbc4b0",
+          "settings": {
+            "fallbackToBlockPosition": true,
+            "waitForElementSelector": "",
+            "waitForElementDelay": 1
+          }
+        },
+        "trust_strip": {
+          "type": "trust_strip",
+          "settings": {}
+        },
+        "feature_icons": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "{% render 'celine-product-features', product: product %}"
+          }
+        },
+        "description": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "{% render 'celine-product-description', product: product %}"
+          }
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "share_label": "Share"
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "rating",
+        "deal_bundle",
+        "size_guide",
+        "trust_strip",
+        "feature_icons",
+        "description",
+        "share"
+      ],
+      "settings": {
+        "enable_sticky_info": true,
+        "color_scheme": "scheme-1",
+        "media_size": "small",
+        "constrain_to_viewport": false,
+        "media_fit": "contain",
+        "gallery_layout": "thumbnail",
+        "mobile_thumbnails": "show",
+        "media_position": "left",
+        "image_zoom": "lightbox",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "padding_top": 36,
+        "padding_bottom": 12
+      }
+    },
+    "details-band": {
+      "type": "icon-columns",
+      "blocks": {
+        "fit": {
+          "type": "icon_column",
+          "settings": {
+            "icon": "silhouette",
+            "heading": "A flattering fit",
+            "text": "Cut to move with you"
+          }
+        },
+        "fabric": {
+          "type": "icon_column",
+          "settings": {
+            "icon": "leaf",
+            "heading": "Sustainable fabric",
+            "text": "Responsibly sourced materials"
+          }
+        },
+        "made_in": {
+          "type": "icon_column",
+          "settings": {
+            "icon": "map_pin",
+            "heading": "Made in Toronto",
+            "text": "Designed and finished locally"
+          }
+        }
+      },
+      "block_order": [
+        "fit",
+        "fabric",
+        "made_in"
+      ],
+      "settings": {
+        "caption": "",
+        "heading": "",
+        "columns_desktop": "3",
+        "color_scheme": "scheme-4",
+        "padding_top": 48,
+        "padding_bottom": 48
+      }
+    },
+    "reviews": {
+      "type": "product-reviews",
+      "blocks": {
+        "r1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "<p><em>Placed my second order and i'm in love again with the outfits!</em></p>",
+            "name": "Claire Drumont"
+          }
+        },
+        "r2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "<p>Absolutely love the quality and fit — this is the kind of piece I'll wear for years.</p>",
+            "name": "Ann Wilson"
+          }
+        },
+        "r3": {
+          "type": "review",
+          "settings": {
+            "rating": 4,
+            "quote": "<p><em>Love the dresses i received! Tracked shipping was also nice.</em></p>",
+            "name": "Ava wILLIAMS"
+          }
+        }
+      },
+      "block_order": [
+        "r1",
+        "r2",
+        "r3"
+      ],
+      "settings": {
+        "heading": "",
+        "color_scheme": "scheme-2",
+        "padding_top": 56,
+        "padding_bottom": 56
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "settings": {
+        "heading": "You may also like",
+        "heading_size": "h1",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": "scheme-1",
+        "image_ratio": "portrait",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "padding_top": 56,
+        "padding_bottom": 36
+      }
+    },
+    "faq": {
+      "type": "collapsible-content",
+      "blocks": {
+        "q1": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Do you offer free shipping?",
+            "icon": "none",
+            "row_content": "<p>Yes — we offer complimentary shipping on all Canadian orders, with no minimum spend. Orders ship within 1–2 business days.</p>",
+            "page": ""
+          }
+        },
+        "q2": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "What is your return policy?",
+            "icon": "none",
+            "row_content": "<p>We accept easy returns within 30 days on most items. A few final-sale pieces are clearly marked before purchase.</p>",
+            "page": ""
+          }
+        },
+        "q3": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "How can I track my order?",
+            "icon": "none",
+            "row_content": "<p>As soon as your order ships, you'll receive an email with a tracking link so you can follow it every step of the way.</p>",
+            "page": ""
+          }
+        },
+        "q4": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "What payment methods do you accept?",
+            "icon": "none",
+            "row_content": "<p>We accept all major credit cards, Apple Pay, Google Pay, PayPal, Shop Pay and more — all processed securely at checkout.</p>",
+            "page": ""
+          }
+        },
+        "q5": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "How do I find my size?",
+            "icon": "none",
+            "row_content": "<p>Every product page includes a size guide with detailed measurements. If you're between sizes or unsure, reach out to info@celinebeaumont.com and we're happy to help.</p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5"
+      ],
+      "settings": {
+        "caption": "Need a hand?",
+        "heading": "Frequently asked questions",
+        "heading_size": "h1",
+        "heading_alignment": "center",
+        "layout": "none",
+        "container_color_scheme": "scheme-2",
+        "color_scheme": "scheme-2",
+        "open_first_collapsible_row": false,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_second",
+        "footer_text": "<p>Still have a question? <a href=\"/pages/contact\">Contact us</a> · info@celinebeaumont.com</p>",
+        "padding_top": 56,
+        "padding_bottom": 64
+      }
+    },
+    "welcome_popup": {
+      "type": "celine-welcome-popup",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "details-band",
+    "reviews",
+    "related-products",
+    "faq",
+    "welcome_popup"
+  ]
+}

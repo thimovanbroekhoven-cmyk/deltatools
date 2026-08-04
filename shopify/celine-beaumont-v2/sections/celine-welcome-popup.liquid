@@ -1,0 +1,203 @@
+{%- comment -%}
+  Celine Beaumont: welcome e-mail capture popup, added to the product template.
+  Captures the e-mail into Shopify's customer marketing list via the native
+  {% form 'customer' %} (tagged "newsletter, welcome-popup"), and on a successful
+  sign-up reveals the one-time welcome discount code (default WELCOME10 — set it
+  to once-per-customer in Shopify > Discounts). Shows after a short delay; a
+  visitor who dismisses without subscribing sees it again after "Re-show after"
+  days (0 = never), and a visitor who already subscribed never sees it again.
+  Fully reversible: remove this section from the product template + delete this
+  file and assets/celine-welcome-popup.css.
+{%- endcomment -%}
+{{ 'celine-welcome-popup.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign welcome_code = section.settings.discount_code | default: 'WELCOME10'
+  assign welcome_delay = section.settings.delay_seconds | default: 4
+  assign reshow_days = section.settings.reshow_days | default: 3
+-%}
+
+<div
+  class="celine-welcome-popup"
+  id="CelineWelcomePopup"
+  data-delay="{{ welcome_delay }}"
+  data-reshow-days="{{ reshow_days }}"
+  hidden
+>
+  <div class="celine-welcome-popup__overlay" data-welcome-close></div>
+  <div
+    class="celine-welcome-popup__dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="CelineWelcomeHeading"
+  >
+    <button
+      type="button"
+      class="celine-welcome-popup__close"
+      data-welcome-close
+      aria-label="{{ 'accessibility.close' | t }}"
+    >
+      <span class="svg-wrapper">{{- 'icon-close.svg' | inline_asset_content -}}</span>
+    </button>
+
+    <div data-welcome-form-state>
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="celine-welcome-popup__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h2 id="CelineWelcomeHeading" class="celine-welcome-popup__heading">
+        {{ section.settings.heading | escape }}
+      </h2>
+      {%- if section.settings.subtext != blank -%}
+        <p class="celine-welcome-popup__text">{{ section.settings.subtext | escape }}</p>
+      {%- endif -%}
+
+      {%- form 'customer', id: 'CelineWelcomeForm', class: 'celine-welcome-popup__form' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter, welcome-popup">
+        {%- if form.errors -%}
+          <p class="celine-welcome-popup__error">
+            {{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}
+          </p>
+          <script>window.__celineWelcomeError = true;</script>
+        {%- endif -%}
+        <label class="visually-hidden" for="CelineWelcomeEmail">{{ 'newsletter.label' | t | default: 'Email' }}</label>
+        <input
+          id="CelineWelcomeEmail"
+          class="celine-welcome-popup__input"
+          type="email"
+          name="contact[email]"
+          value="{{ form.email }}"
+          placeholder="{{ section.settings.placeholder | escape }}"
+          required
+          autocomplete="email"
+          {% if form.errors %}aria-invalid="true"{% endif %}
+        >
+        <button type="submit" class="celine-welcome-popup__submit button">
+          {{ section.settings.button_label | escape }}
+        </button>
+        {%- if section.settings.disclaimer != blank -%}
+          <p class="celine-welcome-popup__small">{{ section.settings.disclaimer | escape }}</p>
+        {%- endif -%}
+        {%- if form.posted_successfully? -%}
+          <script>window.__celineWelcomeSuccess = true;</script>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+
+    <div data-welcome-success-state hidden>
+      <p class="celine-welcome-popup__eyebrow">{{ section.settings.success_eyebrow | escape }}</p>
+      <h2 class="celine-welcome-popup__heading">{{ section.settings.success_heading | escape }}</h2>
+      {%- if section.settings.success_text != blank -%}
+        <p class="celine-welcome-popup__text">{{ section.settings.success_text | escape }}</p>
+      {%- endif -%}
+      <div class="celine-welcome-popup__code">
+        <span data-welcome-code>{{ welcome_code | escape }}</span>
+        <button type="button" class="celine-welcome-popup__copy" data-welcome-copy>Copy</button>
+      </div>
+      <a href="{{ routes.all_products_collection_url }}" class="button celine-welcome-popup__shop">
+        {{ section.settings.success_button_label | escape }}
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var popup = document.getElementById('CelineWelcomePopup');
+    if (!popup) return;
+    var KEY = 'celineWelcomePopup';
+    var formState = popup.querySelector('[data-welcome-form-state]');
+    var successState = popup.querySelector('[data-welcome-success-state]');
+    var delay = (parseInt(popup.getAttribute('data-delay'), 10) || 4) * 1000;
+    var reshowDays = parseInt(popup.getAttribute('data-reshow-days'), 10);
+    if (isNaN(reshowDays)) reshowDays = 3;
+    var isEditor = window.Shopify && window.Shopify.designMode;
+
+    function open(showSuccess) {
+      popup.hidden = false;
+      if (showSuccess) {
+        formState.hidden = true;
+        successState.hidden = false;
+      }
+      requestAnimationFrame(function () { popup.classList.add('is-open'); });
+      document.body.classList.add('celine-welcome-open');
+    }
+    function close() {
+      popup.classList.remove('is-open');
+      document.body.classList.remove('celine-welcome-open');
+      setTimeout(function () { popup.hidden = true; }, 300);
+    }
+
+    popup.querySelectorAll('[data-welcome-close]').forEach(function (el) {
+      el.addEventListener('click', close);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && popup.classList.contains('is-open')) close();
+    });
+
+    var copyBtn = popup.querySelector('[data-welcome-copy]');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', function () {
+        var code = (popup.querySelector('[data-welcome-code]').textContent || '').trim();
+        if (navigator.clipboard) { navigator.clipboard.writeText(code); }
+        copyBtn.textContent = 'Copied';
+        setTimeout(function () { copyBtn.textContent = 'Copy'; }, 2000);
+      });
+    }
+
+    var stored;
+    try { stored = localStorage.getItem(KEY); } catch (e) {}
+
+    // Just subscribed on this page load — show the reward and remember forever.
+    if (window.__celineWelcomeSuccess) {
+      try { localStorage.setItem(KEY, 'subscribed'); } catch (e) {}
+      open(true);
+      return;
+    }
+
+    // Form came back with an error — reopen so they can retry.
+    if (window.__celineWelcomeError) { open(false); return; }
+
+    // Never render inside the theme editor (design mode).
+    if (isEditor) return;
+
+    // Subscribers never see it again.
+    if (stored === 'subscribed') return;
+
+    // Non-subscribers: re-show once "reshowDays" have passed since last shown.
+    if (stored && stored.indexOf('seen:') === 0) {
+      if (reshowDays <= 0) return; // 0 = show only once, ever
+      var lastSeen = parseInt(stored.slice(5), 10) || 0;
+      if (Date.now() - lastSeen < reshowDays * 86400000) return;
+    }
+
+    setTimeout(function () {
+      open(false);
+      try { localStorage.setItem(KEY, 'seen:' + Date.now()); } catch (e) {}
+    }, delay);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Welcome pop-up",
+  "settings": [
+    { "type": "paragraph", "content": "Email-capture popup shown on product pages. The reward code must match a discount you created under Discounts (set it to 'once per customer')." },
+    { "type": "header", "content": "Sign-up step" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Celine Beaumont" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Get 10% off your first order" },
+    { "type": "textarea", "id": "subtext", "label": "Text", "default": "Join our list for early access to new arrivals — and a one-time 10% welcome code for your first order." },
+    { "type": "text", "id": "placeholder", "label": "Email placeholder", "default": "Your email address" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Claim my 10% off" },
+    { "type": "text", "id": "disclaimer", "label": "Small print", "default": "No spam — unsubscribe anytime." },
+    { "type": "header", "content": "Reward step (after sign-up)" },
+    { "type": "text", "id": "discount_code", "label": "Discount code", "default": "WELCOME10", "info": "Must exactly match a code in Shopify > Discounts." },
+    { "type": "text", "id": "success_eyebrow", "label": "Eyebrow", "default": "You're on the list" },
+    { "type": "text", "id": "success_heading", "label": "Heading", "default": "Here's your welcome code" },
+    { "type": "textarea", "id": "success_text", "label": "Text", "default": "Use this one-time code at checkout for 10% off your first order:" },
+    { "type": "text", "id": "success_button_label", "label": "Button label", "default": "Start shopping" },
+    { "type": "header", "content": "Behaviour" },
+    { "type": "range", "id": "delay_seconds", "min": 0, "max": 20, "step": 1, "unit": "s", "label": "Delay before showing", "default": 4 },
+    { "type": "range", "id": "reshow_days", "min": 0, "max": 30, "step": 1, "unit": "d", "label": "Re-show after (non-subscribers)", "info": "Days before a visitor who didn't sign up sees it again. 0 = only once, ever.", "default": 3 }
+  ]
+}
+{% endschema %}
